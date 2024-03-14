@@ -1,12 +1,7 @@
-// // Download the helper library from https://www.twilio.com/docs/node/install
-// // Set environment variables for your credentials
-// // Read more a
+
 const accountSid = process.env.ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const serviceSid = process.env.SERVICE_ID
-
-const client = require("twilio")(accountSid, authToken);
-
 
 module.exports = {
     sendOtp: (Mobile) => {

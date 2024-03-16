@@ -55,5 +55,37 @@ module.exports = {
         console.log(error);
         return(error)
     }
-  }
+  },
+  viewPsychologyst:async(req,res)=>{
+    try {
+      console.log(req.params._id,"iiiiiiiiiiiiiiiiiiiddd");
+      const OnePsychologyst = await adminHelper.getOnePsycho(req.params._id)
+      console.log(OnePsychologyst,"enter into conroller");
+      if(OnePsychologyst.error || OnePsychologyst.notfind){
+        res.json({message:"you cant view psychologyst now"})
+      }else{
+        res.status(200).json({OnePsychologyst})
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({message:"internal server error"})
+    }
+  },
+
+  findAllUsers:async(req,res)=>{
+    try {
+        const response = await adminHelper.findUsers()
+        console.log(response,"in controller");
+        if(response.error){
+          res.status(404).json({message:"something went wrong!please try again later"})
+        }else if(response.noUsers){
+          res.status(404).json({message:"users not available"})
+        }else{
+          res.status(200).json({response})
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message:"internal server error"})
+    }
+}
 };

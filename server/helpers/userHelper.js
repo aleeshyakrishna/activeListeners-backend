@@ -1,6 +1,9 @@
 const bcrypt = require('bcrypt')
 const saltRounds = 10;
 const User = require('../models/userSchema')
+const Newsletter = require("../models/newsletterSubscription")
+const getInTouch = require("../models/getInTouch")
+
 var dotenv = require("dotenv");
 dotenv.config();
 const jwt = require('jsonwebtoken')
@@ -109,7 +112,56 @@ module.exports = {
             console.error(error);
             return { error: true };
         }
-    }
+    },
+
+    letterSub:async(Email)=>{
+        try {
+            console.log(Email,"emailllllllllll");
+           
+            const emailExist = await Newsletter.findOne({email:Email})
+            
+            if(emailExist){
+                console.log(emailExist);
+                return ({subscribed:true})
+            }else{
+                // console.log(mail,"kkkkkkkkkkkkkkk");
+                const newSub = new Newsletter({
+                    email:Email
+                })
+                const res = await newSub.save()
+                console.log(res,"yyyyyyyyyyyyyyy");
+                return (res)
+            }
+            
+
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+    postGet_in_touchForm:async (formData)=>{
+        try {
+           console.log(formData);
+            return new Promise((resolve,reject)=>{
+                const newData = new getInTouch({
+                    name:formData.name,
+                    email:formData.email,
+                    mobile:formData.mobile,
+                    message:formData.message
+                })
+                newData.save().then((result)=>{
+                    resolve(result)
+                }).catch((error)=>{
+                    console.log(error);
+                    reject(error)
+                })
+            })
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+    
     
     
 }

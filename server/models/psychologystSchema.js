@@ -20,7 +20,17 @@ const psychologystSchema = new mongoose.Schema({
     },
     available:{
         type:String
-    }
+    },
+    
+    // resume:{
+    //     type:String
+    // },
+    // discription:{
+    //     type:String
+    // },
+    // image:{
+    //     type:String
+    // }
 },
 {
     timestamps:true

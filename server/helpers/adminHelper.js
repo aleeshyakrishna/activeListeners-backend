@@ -1,5 +1,5 @@
 const Psychologyst = require("../models/psychologystSchema")
-
+const User = require("../models/userSchema")
 module.exports = {
     AddPsychologyst:async(psychologystData)=>{
 
@@ -45,6 +45,36 @@ module.exports = {
             console.log(
                 error
             );
+            return ({error:true})
+        }
+    },
+    getOnePsycho:async(Id)=>{
+
+        try {
+
+            console.log(Id,"in helper........");
+            const findPsycho =  await Psychologyst.findOne({_id:Id})
+            console.log(findPsycho,"findoutttttttt");
+            if(findPsycho){
+                return ({notfind:false},findPsycho)
+            }else{
+                return ({notfind:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+    findUsers:async()=>{
+        try {
+            const allUsers = await User.find()
+            console.log(allUsers.length,"all users........");
+           if(allUsers.length < 0){
+            return ({noUsers:true})
+           }else{
+            return ({noUsers:false},allUsers)
+           }
+        } catch (error) {
             return ({error:true})
         }
     }

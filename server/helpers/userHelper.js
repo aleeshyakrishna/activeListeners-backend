@@ -3,6 +3,7 @@ const saltRounds = 10;
 const User = require('../models/userSchema')
 const Newsletter = require("../models/newsletterSubscription")
 const getInTouch = require("../models/getInTouch")
+const hiring = require("../models/hiringSchema")
 
 var dotenv = require("dotenv");
 dotenv.config();
@@ -161,6 +162,36 @@ module.exports = {
             return ({error:true})
         }
     },
+
+    postResume:async(data,s3Result)=>{
+
+        try {
+            const newAppln =new hiring({
+                name : data.name,
+                email:data.email,
+                number:data.mobile,
+                position:data.position,
+                resume:s3Result.file.Location,
+                coverletter:data.coverletter
+            })
+            const result = await newAppln.save()
+            console.log(result,"mongodb done...");
+            return (result)
+
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+
+    contactUsForm:(datas)=>{
+        try {
+            
+        } catch (error) {
+            console.log(error);
+            return({error:true})
+        }
+    }
     
     
     

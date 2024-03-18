@@ -87,5 +87,20 @@ module.exports = {
         console.log(error);
         res.status(500).json({message:"internal server error"})
     }
+},
+viewUser:async(req,res)=>{
+  try {
+    console.log(req.params._id,"iiiiiiiiiiiiiiiiiiiddd");
+    const Getuser = await adminHelper.getOneUser(req.params._id)
+    console.log(Getuser,"enter into conroller");
+    if(Getuser.error || Getuser.notfind){
+      res.json({message:"you cant view psychologyst now"})
+    }else{
+      res.status(200).json({Getuser})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"internal server error"})
+  }
 }
 };

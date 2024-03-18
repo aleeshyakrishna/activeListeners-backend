@@ -8,4 +8,5 @@ router.post('/post_psychologyst',adminController.addPsychologyst)
 router.get('/view_psychologyst',adminController.viewPsychologyst)
 router.get('/viewOne_Psychologyst/:_id', adminController.viewPsychologyst);
 router.get('/view_all_users',adminController.findAllUsers)
+router.get('/viewOne_user/:_id',adminController.viewUser)
 module.exports = router;

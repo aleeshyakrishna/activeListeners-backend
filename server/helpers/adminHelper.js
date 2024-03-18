@@ -77,5 +77,22 @@ module.exports = {
         } catch (error) {
             return ({error:true})
         }
-    }
+    },
+    getOneUser:async(Id)=>{
+
+        try {
+
+            console.log(Id,"in helper........");
+            const findUser =  await User.findOne({_id:Id})
+            console.log(findUser,"findoutttttttt");
+            if(findUser){
+                return ({notfind:false},findUser)
+            }else{
+                return ({notfind:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
 }

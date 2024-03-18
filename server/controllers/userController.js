@@ -1,6 +1,6 @@
 const userHelper = require("../helpers/userHelper");
 const twilio = require("../utils/twilio");
-
+const s3Model = require("../models/s3Model")
 module.exports = {
   getHome: (req, res) => {
     try {
@@ -165,6 +165,33 @@ verifyOtp: async (req, res) => {
         res.status(500).json({message:"internal server error!!"})
     }
 },
+
+applicatonForm:async(req,res)=>{
+  try {
+    console.log(req.body,req.file,"hiring formmm.........");
+    const result = await s3Model.uploadFile(req.file)
+    console.log(result,"after s3 stroing.......");
+    if(result){
+      await userHelper.postResume(req.body,result).then((result)=>{
+       res.status(200).json({message:"successfully submitted the application form!",result})
+      })
+   }else{
+       res.status(404).json({message:"something went wrong!!"})
+   }
+  } catch (error) {
+    res.status(500).json({message:"Internal sever error!!"})
+  }
+},
+
+contactUs:async(req,res)=>{
+  try {
+    console.log(req.body,"form data..........");
+    const reslt = await userHelper.contactUsForm(req.body)
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"Internal server error!"})
+  }
+}
   
 
 

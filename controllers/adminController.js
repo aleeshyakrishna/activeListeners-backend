@@ -102,5 +102,20 @@ viewUser:async(req,res)=>{
     console.log(error);
     res.status(500).json({message:"internal server error"})
   }
+},
+viewHiring:async(req,res)=>{
+  try {
+    const response = await adminHelper.findHiring()
+    console.log(response,"ressss");
+    if(response.error){
+      res.status(404).json({message:"something went wrong!please try again later"})
+    }else if(response.noUsers){
+      res.status(404).json({message:"users not available"})
+    }else{
+      res.status(200).json({response})
+    }
+  } catch (error) {
+    res.status(500).json({message:"internal server error!"})
+  }
 }
 };

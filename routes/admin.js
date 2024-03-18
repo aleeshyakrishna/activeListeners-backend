@@ -9,4 +9,5 @@ router.get('/view_psychologyst',adminController.viewPsychologyst)
 router.get('/viewOne_Psychologyst/:_id', adminController.viewPsychologyst);
 router.get('/view_all_users',adminController.findAllUsers)
 router.get('/viewOne_user/:_id',adminController.viewUser)
+router.get('/viewHiring',adminController.viewHiring)
 module.exports = router;

@@ -1,5 +1,6 @@
 const Psychologyst = require("../models/psychologystSchema")
 const User = require("../models/userSchema")
+const Hiring =require("../models/hiringSchema")
 module.exports = {
     AddPsychologyst:async(psychologystData)=>{
 
@@ -95,4 +96,18 @@ module.exports = {
             return ({error:true})
         }
     },
+    findHiring:async()=>{
+        try {
+            const allAppln = await Hiring.find()
+            console.log(allAppln.length,"all users........");
+           if(allAppln.length < 0){
+            return ({noUsers:true})
+           }else{
+            return ({noUsers:false},allAppln)
+           }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    }
 }

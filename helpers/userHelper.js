@@ -16,7 +16,7 @@ module.exports = {
             const emailExist = await User.findOne({email:userData.email})
             const mobileExist = await User.findOne({mobile:userData.mobile})
             if(emailExist || mobileExist){
-                // console.log("exists user",emailExist,mobileExist);
+                console.log("exists user",emailExist,mobileExist);
                 return({Exist:true})
             }
             // console.log("not exists..");

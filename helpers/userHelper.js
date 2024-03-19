@@ -17,7 +17,7 @@ module.exports = {
             const mobileExist = await User.findOne({mobile:userData.mobile})
             if(emailExist || mobileExist){
                 // console.log("exists user",emailExist,mobileExist);
-                return({Exist:true,message:"user Exist!please login!!"})
+                return({Exist:true})
             }
             // console.log("not exists..");
             const hashedPassword = await bcrypt.hash(userData.password,saltRounds)
@@ -246,7 +246,7 @@ module.exports = {
                 return ({deleted:true})
             }else{
                 return ({deleted:false})
-                
+
             }
         } catch (error) {
             console.log(error);

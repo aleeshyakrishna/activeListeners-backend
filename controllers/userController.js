@@ -14,8 +14,7 @@ module.exports = {
     try {
       await userHelper.userRegistration(req.body).then((response) => {
         if (response.Exist) {
-          const msg = response.message;
-          res.status(409).json({ message: msg });
+          res.status(409).json({ message:"user Exist!please login!!"});
         } else {
           res.status(200).json({ message: "user registered successfully!!" });
         }

@@ -25,7 +25,7 @@ module.exports = {
             const newUser =await  new User({
                 name : userData.name,
                 email:userData.email,
-                mobile:userData.mobile,
+                mobile:userData.phoneNumber,
                 password:hashedPassword
             })
             const userCreated =await newUser.save()

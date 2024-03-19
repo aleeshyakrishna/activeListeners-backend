@@ -6,10 +6,11 @@ const client = require("twilio")(accountSid, authToken);
 
 
 module.exports = {
-  
-    sendOtp: (Mobile) => {
+  sendOtp: (Mobile) => {
+      console.log(accountSid,authToken,serviceSid,"looooooooooogggggg")
         console.log("twilioooo");
       return new Promise((resolve, reject) => {
+        
         var {mobile}=Mobile;
         client.verify.v2
           .services(serviceSid)

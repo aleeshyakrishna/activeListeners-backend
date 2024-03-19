@@ -191,7 +191,35 @@ contactUs:async(req,res)=>{
     console.log(error);
     res.status(500).json({message:"Internal server error!"})
   }
+},
+getProfile:async(req,res)=>{
+  try {
+    console.log(req.params.id,"iiiiiiiiiiiiiiiiiiiddd");
+    const Getuser = await userHelper.getOneUser(req.params.id)
+    console.log(Getuser,"enter into conroller");
+    if(Getuser.error || Getuser.notfind){
+      res.json({message:"you cant view your profile now"})
+    }else{
+      res.status(200).json({Getuser})
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"internal server error"})
+  }
+},
+
+editProfile:async(req,res)=>{
+  try {
+    console.log(req.params.id,"iiiiiiiiiiiiiiiiiiiddd");
+    console.log(req.body,".......");
+    const Getuser = await userHelper.getOneUser(req.params.id,req.body)
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({message:"internal server error"})
+  }
 }
+
   
 
 

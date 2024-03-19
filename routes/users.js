@@ -19,4 +19,5 @@ router.post('/application',upload.single('resume'),userController.applicatonForm
 // router.post('/contact_us',userController.contactUs)
 router.get('/my_profile/:id',userController.getProfile)
 router.put('/edit_my_profile/:id',userController.editProfile)
+router.delete('/delete_account/:id',userController.deleteAccount)
 module.exports = router;

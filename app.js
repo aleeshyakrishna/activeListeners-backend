@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var cors = require("cors")
 // var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
 var adminsRouter = require('./routes/admin');
@@ -22,8 +22,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+// CORS configuratio
+
+app.use(cors({
+  origin: [
+      'http://localhost:3000',
+  ], // Update with your client's origin
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true, // Allow credentials (cookies, etc.)
+}));
 
 app.use('/', usersRouter);
 app.use('/admin', adminsRouter);

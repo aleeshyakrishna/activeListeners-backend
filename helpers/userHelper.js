@@ -44,7 +44,7 @@ module.exports = {
             if(userExist){
                 
                 console.log(userExist,"iiiii");
-                const checkPassword =await bcrypt.compare(
+                const checkPassword = bcrypt.compare(
                     signIndata.password,userExist.password)
                     console.log(checkPassword,"checking password......");
                 if(!checkPassword){

@@ -32,10 +32,10 @@ module.exports = {
           res.status(500).json({ message: "something went wrong!!" });
         }
         if (response.PassError) {
-          res.status(404).json({ message: "invalid password or id" });
+          res.json({ message: "invalid password or id" });
         }
         if (!response.exist) {
-          res.status(404).json({ message: "User not found!!" });
+          res.json({ message: "User not found!!" });
         } else {
           // console.log(response.userExist, "response");
           const user = response.userExist;

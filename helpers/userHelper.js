@@ -22,7 +22,7 @@ module.exports = {
             // console.log("not exists..");
             const hashedPassword = await bcrypt.hash(userData.password,saltRounds)
             // console.log("llll");
-            const newUser =await  new User({
+            const newUser = new User({
                 name : userData.name,
                 email:userData.email,
                 mobile:userData.phoneNumber,

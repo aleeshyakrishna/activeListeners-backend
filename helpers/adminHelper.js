@@ -1,6 +1,8 @@
 const Psychologyst = require("../models/psychologystSchema")
 const User = require("../models/userSchema")
 const Hiring =require("../models/hiringSchema")
+const Podcast = require("../models/podcastSchema")
+
 module.exports = {
     AddPsychologyst:async(psychologystData)=>{
 
@@ -105,6 +107,23 @@ module.exports = {
            }else{
             return ({noUsers:false},allAppln)
            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+    postPodcst:async(podcastData,s3result)=>{
+        try {
+            const savePodcast = new Podcast({
+                title:podcastData.title,
+                discription:podcastData.discription,
+                category:podcastData.category,
+                thumbnail:s3result.thumbnail.Location,
+                source:s3result.source.Location,
+            })
+            const datass =  await savePodcast.save()
+            console.log(datass,"punuuu");
+            return (datass)
         } catch (error) {
             console.log(error);
             return ({error:true})

@@ -1,4 +1,5 @@
 var adminHelper = require("../helpers/adminHelper");
+const s3Model = require("../models/s3Model");
 
 const adminCredential = {
   name: "ACTIVELISTENERS ADMIN PANEL",
@@ -116,6 +117,27 @@ viewHiring:async(req,res)=>{
     }
   } catch (error) {
     res.status(500).json({message:"internal server error!"})
+  }
+},
+addPodcast:async(req,res)=>{
+  try {
+    console.log(req.body,req.files,"form daaaaaaata");
+    const resp = await s3Model.uploadPodcast(req.files)
+    console.log(resp,"get from s3........");
+    if(resp.error){
+      res.json({message:"something went wrong"})
+    }else{
+      const savePodcast = await adminHelper.postPodcst(req.body,resp)
+      if(savePodcast.error){
+        res.status(500).json({message:"something went wrong!!"})
+      }else{
+        const msg = savePodcast.datass
+        res.json({message:"successfully added podcast",msg})
+      }
+    }
+  } catch (error) {
+    res.status(500).json({message:"internal server error!"})
+
   }
 }
 };

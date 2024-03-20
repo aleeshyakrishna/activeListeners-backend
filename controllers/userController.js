@@ -30,28 +30,28 @@ module.exports = {
       await userHelper.userSignin(req.body).then((response) => {
         if (response.error) {
           res.status(500).json({ message: "something went wrong!!" });
-        }
-        if (response.PassError) {
+        }else if (response.PassError) {
           res.json({ message: "invalid password or id" });
         }
-        if (!response.exist) {
-          res.json({ message: "User not found!!" });
+        else if (response.exist) {
+           // console.log(response.userExist, "response");
+           const user = response.userExist;
+           const username = response.userExist.name;
+           const userid = response.userExist._id;
+           // console.log(userid, username, "peeeeeeeeeeeeeeee");
+ 
+           const Token = userHelper.createToken(userid.toString(), username);
+           // console.log(Token, "this is tokennnnnnnn");
+ 
+           res.json({
+             message: "user successfully logedIn",
+             user,
+             status: true,
+             Token,
+           });
         } else {
-          // console.log(response.userExist, "response");
-          const user = response.userExist;
-          const username = response.userExist.name;
-          const userid = response.userExist._id;
-          // console.log(userid, username, "peeeeeeeeeeeeeeee");
-
-          const Token = userHelper.createToken(userid.toString(), username);
-          // console.log(Token, "this is tokennnnnnnn");
-
-          res.json({
-            message: "user successfully logedIn",
-            user,
-            status: true,
-            Token,
-          });
+          res.json({ message: "User not found!!" });
+         
         }
       });
     } catch (error) {

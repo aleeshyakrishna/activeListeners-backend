@@ -44,13 +44,13 @@ module.exports = {
             if(userExist){
                 
                 console.log(userExist,"iiiii");
-                const checkPassword = bcrypt.compare(
+                const checkPassword = await bcrypt.compare(
                     signIndata.password,userExist.password)
                     console.log(checkPassword,"checking password......");
-                if(!checkPassword){
-                    return({PassError:true})
-                }else{
+                if(checkPassword){
                     return ({exist:true,userExist})
+                }else{
+                    return({PassError:true})
                 }
             }else{
                 console.log("not exist");

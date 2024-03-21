@@ -140,7 +140,13 @@ module.exports = {
       } else if (response.subscribed) {
         res.json({ message: "already subscribed!!" });
       } else {
-        res.status(200).json({ message: "successfully subscribed!!" });
+        const jii = await userHelper.sendVerificationEmail(response,res)
+        console.log(jii,"joooooooooooo");
+        if(jii){
+
+          res.status(200).json({message:"Thankyou for Subscribing with Active Listeners"})
+        }
+        // res.status(200).json({ message: "successfully subscribed!!" });
       }
     } catch (error) {
       console.log(error);
@@ -185,7 +191,7 @@ module.exports = {
             });
         });
       } else {
-        res.status(404).json({ message: "something went wrong!!" });
+        res.json({ message: "something went wrong!!" });
       }
     } catch (error) {
       res.status(500).json({ message: "Internal sever error!!" });

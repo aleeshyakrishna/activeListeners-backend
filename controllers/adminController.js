@@ -139,5 +139,19 @@ addPodcast:async(req,res)=>{
     res.status(500).json({message:"internal server error!"})
 
   }
+},
+viewAllPodcast:async(req,res)=>{
+  try {
+    const reslt = await adminHelper.getAllPodcast()
+    if(reslt.error){
+      res.statsus(500).json({message:"internal server error!"})
+    }else if(reslt.notfound){
+      res.status(404).json({message:"podcast not available now"})
+    }else{
+      res.status(200).json({reslt})
+    }
+  } catch (error) {
+    res.status(500).json({message:"internal server error!"})
+  }
 }
 };

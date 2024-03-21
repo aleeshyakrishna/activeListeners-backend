@@ -4,6 +4,7 @@ const User = require('../models/userSchema')
 const Newsletter = require("../models/newsletterSubscription")
 const getInTouch = require("../models/getInTouch")
 const hiring = require("../models/hiringSchema")
+const Podcast = require("../models/podcastSchema")
 
 var dotenv = require("dotenv");
 dotenv.config();
@@ -251,6 +252,20 @@ module.exports = {
         } catch (error) {
             console.log(error);
             return { error: true };
+        }
+    },
+    getAllPodcast:async()=>{
+        try {
+            const allPodcasts = await Podcast.find()
+            console.log(allPodcasts,"oooii");
+            if(allPodcasts){
+                return (allPodcasts)
+            }else{
+                return ({notfound:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
         }
     }
     

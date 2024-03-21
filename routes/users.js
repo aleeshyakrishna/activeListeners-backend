@@ -25,6 +25,6 @@ router.post('/application',upload.single('resume'),userController.applicatonForm
 router.get('/my_profile/:id',userController.getProfile)
 router.put('/edit_my_profile/:id',userController.editProfile)
 router.delete('/delete_account/:id',userController.deleteAccount)
-
+router.get('/podcast',userController.viewAllPodcast)
 
 module.exports = router;

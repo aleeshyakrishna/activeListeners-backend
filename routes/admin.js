@@ -19,5 +19,5 @@ router.post(
                 { name: 'source' }]),
                 adminController.addPodcast
             )
-// router.get("/view_all_podcast",adminController,viewAllPodcast)
+router.get("/view_all_podcast",adminController.viewAllPodcast)
 module.exports = router;

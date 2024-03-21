@@ -128,5 +128,19 @@ module.exports = {
             console.log(error);
             return ({error:true})
         }
+    },
+    getAllPodcast:async()=>{
+        try {
+            const allPodcasts = await Podcast.find()
+            console.log(allPodcasts,"oooii");
+            if(allPodcasts){
+                return (allPodcasts)
+            }else{
+                return ({notfound:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
     }
 }

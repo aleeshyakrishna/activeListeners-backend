@@ -43,7 +43,7 @@ module.exports = {
            const Token = userHelper.createToken(userid.toString(), username);
            // console.log(Token, "this is tokennnnnnnn");
  
-           res.json({
+           res.status(200).json({
              message: "user successfully logedIn",
              user,
              status: true,
@@ -256,6 +256,21 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "internal server error" });
+    }
+  },
+
+  viewAllPodcast:async(req,res)=>{
+    try {
+      const reslt = await userHelper.getAllPodcast()
+      if(reslt.error){
+        res.statsus(500).json({message:"internal server error!"})
+      }else if(reslt.notfound){
+        res.status(404).json({message:"podcast not available now"})
+      }else{
+        res.status(200).json({reslt})
+      }
+    } catch (error) {
+      res.status(500).json({message:"internal server error!"})
     }
   }
 };

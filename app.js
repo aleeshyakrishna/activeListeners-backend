@@ -27,7 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors({
   origin: [
       'http://localhost:3000',
-      'http://localhost:3001'
+      'http://localhost:3001',
+      "https://active-listeners-ifuw.vercel.app/"
   ], // Update with your client's origin
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true, // Allow credentials (cookies, etc.)

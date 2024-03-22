@@ -278,5 +278,19 @@ module.exports = {
     } catch (error) {
       res.status(500).json({message:"internal server error!"})
     }
+  },
+
+  viewOnePodcast:async(req,res)=>{
+    try {
+      console.log(req.params.id,"iddddddddddd");
+      const onePod = await userHelper.viewOnePod(req.params.id)
+      if(onePod){
+        res.json({onePod})
+      }else{
+        res.json({message:"Podcast not available"})
+      }
+    } catch (error) {
+      res.status(500).json({message:"internal server error!"})
+    }
   }
 };

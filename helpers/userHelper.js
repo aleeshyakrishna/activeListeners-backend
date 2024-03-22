@@ -161,6 +161,7 @@ module.exports = {
 
   sendVerificationEmail: async ({ _id, email }, res) => {
     try {
+        const pdf = "https://activelisteners.s3.ap-south-1.amazonaws.com/hiring/ALEESHYA%20KRISHNA%20MV__CV.pdf"
       const currentUrl = "http://localhost:3000/";
       console.log(email, _id, "'''''''''''''''''''''''>>>>>>>>>>>>>>>>>>>>>");
       // const uniqueString=uuidv4()+_id
@@ -185,6 +186,13 @@ module.exports = {
             (by Mentoons)
             
             </p><br> `,
+            attachments: [
+                {
+                  filename: 'newsletter.pdf', // Name of the attachment as it will appear in the email
+                  content: pdf, // Content of the PDF file
+                  contentType: 'application/pdf', // Mime type of the attachment
+                }
+              ]
       };
       //hast the unique string
       const mailSend = await transporter.sendMail(mailOption);
@@ -315,4 +323,19 @@ module.exports = {
       return { error: true };
     }
   },
+
+  viewOnePod:async(Id)=>{
+    try {
+        var respp = await Podcast.find({_id:Id})
+        console.log(respp,"resoooooo");
+    
+            return ({found:true},respp)
+       
+            
+        
+    } catch (error) {
+        console.log(error);
+      return { error: true };
+    }
+  }
 };

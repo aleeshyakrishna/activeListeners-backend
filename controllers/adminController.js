@@ -28,7 +28,13 @@ module.exports = {
   addPsychologyst: async(req, res) => {
     try {
         
-        const psychologyst = await adminHelper.AddPsychologyst(req.body)
+
+
+      var respv = await s3Model.uploadPsycho(req.files)
+    if(respv.error){
+      res.json({message:"something went wrong"})
+    }else{
+       const psychologyst = await adminHelper.AddPsychologyst(req.body,respv)
         console.log(psychologyst,"psychologsttttttttttttttttttt");
         if(psychologyst.Exist){
 
@@ -39,11 +45,26 @@ module.exports = {
             res.status(200).json({message:"successfully added psychologyst"})
         }
 
+    }
+
+
+
+        // const psychologyst = await adminHelper.AddPsychologyst(req.body)
+        // console.log(psychologyst,"psychologsttttttttttttttttttt");
+        // if(psychologyst.Exist){
+
+        //     res.status(400).json({message:"Psychologyst already existing"})
+        // }else if(psychologyst.error){
+        //     res.status(400).json({message:"cant find psychologyst!"})
+        // }else{
+        //     res.status(200).json({message:"successfully added psychologyst"})
+        // }
+
     } catch (error) {
       res.status(500).json({ message: "internal server error!!" });
     }
   },
-  viewPsychologyst:async(req,res)=>{
+  viewPsychologysts:async(req,res)=>{
     try {
         const psychos =  await adminHelper.viewPsychologyst()
         console.log(psychos,"controller..........");
@@ -149,6 +170,21 @@ viewAllPodcast:async(req,res)=>{
       res.status(404).json({message:"podcast not available now"})
     }else{
       res.status(200).json({reslt})
+    }
+  } catch (error) {
+    res.status(500).json({message:"internal server error!"})
+  }
+},
+viewOneAppln:async(req,res)=>{
+  try {
+    console.log(req.params._id,req.body,"iiid");
+    const Getappln = await adminHelper.GetOneappln(req.params._id,req.body)
+    console.log(Getappln,"enter into conroller");
+    if(Getappln.error || Getappln.notfind){
+      res.json({message:"you cant view psychologyst now"})
+    }else{
+      res.status(200).json({Getappln})
+      // const updatedStatus = await adminHelper.update(req.params._id,req.body)
     }
   } catch (error) {
     res.status(500).json({message:"internal server error!"})

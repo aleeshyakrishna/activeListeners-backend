@@ -17,7 +17,7 @@ router.post('/send_login',userController.otpLogin)
 //otp verification
 router.post('/verify_otp',userController.verifyOtp)
 //newslettr 
-router.post('/newsletter_subscription',userController.newsLetterSub)
+// router.post('/newsletter_subscription',userController.newsLetterSub)
 //get in touch
 router.post('/get_in_touch',userController.postGetInTouch)
 router.post('/application',upload.single('resume'),userController.applicatonForm)

@@ -4,10 +4,10 @@ const Hiring =require("../models/hiringSchema")
 const Podcast = require("../models/podcastSchema")
 
 module.exports = {
-    AddPsychologyst:async(psychologystData)=>{
+    AddPsychologyst:async(psychologystData,respv)=>{
 
         try {
-            console.log(psychologystData,"poioopoi");
+            console.log(psychologystData,respv,"poioopoi");
             
             const PsychoExist = await Psychologyst.findOne({email:psychologystData.email})
             const mobileExist =await Psychologyst.findOne({mobile:psychologystData.mobile})
@@ -26,7 +26,10 @@ module.exports = {
                     city:psychologystData.city,
                     state:psychologystData.state,
                     gender:psychologystData.gender,
-                    available:psychologystData.available
+                    available:psychologystData.available,
+                    resume:respv.resume.Location,
+                    image:respv.image.Location,
+                    discription:psychologystData.discription
                 })
     
                 const Psycho =await newPsycho.save()
@@ -142,5 +145,35 @@ module.exports = {
             console.log(error);
             return ({error:true})
         }
-    }
+    },
+    GetOneappln:async(Id,stautsNew)=>{
+
+        try {
+
+            console.log(Id,"in helper........");
+            const findAppln =  await Hiring.findByIdAndUpdate(
+                Id,
+                stautsNew,
+                { new: true }
+              );
+            console.log(findAppln,"findoutttttttt");
+            if(findAppln){
+                const upd = await Hiring
+                return ({notfind:false},findAppln)
+            }else{
+                return ({notfind:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+    // update:(Id,NewStatus)=>{
+    //     try {
+    //         const updtd = await Hiring 
+    //     } catch (error) {
+    //         console.log(error);
+    //         return ({error:true})
+    //     }
+    // }
 }

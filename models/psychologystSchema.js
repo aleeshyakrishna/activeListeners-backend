@@ -22,15 +22,15 @@ const psychologystSchema = new mongoose.Schema({
         type:String
     },
     
-    // resume:{
-    //     type:String
-    // },
-    // discription:{
-    //     type:String
-    // },
-    // image:{
-    //     type:String
-    // }
+    resume:{
+        type:String
+    },
+    discription:{
+        type:String
+    },
+    image:{
+        type:String
+    }
 },
 {
     timestamps:true

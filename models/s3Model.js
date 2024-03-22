@@ -66,6 +66,33 @@ module.exports = {
       return {error}; 
     }
   },
+  uploadPsycho: async (files) => {
+    try {
+      const { image, resume } = files;
+  
+      const uploadResumeParams = {
+        Bucket: bucketName,
+        Key: `psychologist/resume/${resume[0].originalname}`,
+        Body: resume[0].buffer,
+      };
+      const resumeResult = await s3.upload(uploadResumeParams).promise();
+  
+      const uploadImageParams = {
+        Bucket: bucketName,
+        Key: `psychologist/image/${image[0].originalname}`,
+        Body: image[0].buffer,
+      };
+      const imageResult = await s3.upload(uploadImageParams).promise();
+  
+      return {
+        resume: resumeResult,
+        image: imageResult,
+      };
+    } catch (error) {
+      console.error("Error uploading podcast:", error);
+      return {error}; 
+    }
+  },
   
 
 

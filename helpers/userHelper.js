@@ -1,6 +1,5 @@
 //node
 const nodemailer = require("nodemailer");
-
 // const transporter = nodemailer.createTransport({
 //   service: "gmail",
 //   auth: {
@@ -29,6 +28,8 @@ const Newsletter = require("../models/newsletterSubscription");
 const getInTouch = require("../models/getInTouch");
 const hiring = require("../models/hiringSchema");
 const Podcast = require("../models/podcastSchema");
+const NGO = require("../models/ngoSchema")
+const Graduate = require("../models/graduateSchema")
 
 var dotenv = require("dotenv");
 dotenv.config();
@@ -335,7 +336,79 @@ module.exports = {
             
         
     } catch (error) {
-        console.log(error);
+      console.log(error);
+      return { error: true };
+    }
+  },
+  postNgo:async(ngoDatas)=>{
+    try {
+      console.log(ngoDatas,"ko");
+      const ngoExist = await NGO.findOne({email:ngoDatas.email_id})
+      if(ngoExist){
+        return ({exist:true})
+        // console.log("existingg...");
+      }else{
+        const newNgo = new NGO({
+          name_of_organization:ngoDatas.name_of_organization,
+          year_of_establishment:ngoDatas.year_of_establishment,
+          number_of_offices:ngoDatas.number_of_offices,
+          telephoneNumber:ngoDatas.telephoneNumber,
+          email:ngoDatas.email_id,
+          websiteUrl:ngoDatas.websiteURL,
+          contact_person_name:ngoDatas.contact_person_name,
+          contact_person_designation:ngoDatas.contact_person_designation,
+          contact_person_phoneNumber:ngoDatas.contact_person_phoneNumber
+        })
+
+        const newNgoDetails = await newNgo.save()
+        return ({exist:false},newNgoDetails)
+        // console.log(newNgoDetails,"alleeeeeeeee");
+      }
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
+
+  postGraduate:async(graduateData)=>{
+    try {
+      const graduateExistemail = await Graduate.findOne({email:graduateData.email})
+      const graduateExistmobile = await Graduate.findOne({mobile:graduateData.mobile})
+      const graduateExistgit = await Graduate.findOne({github:graduateData.github})
+      const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
+
+      if(graduateExistemail || graduateExistmobile ||
+        graduateExistgit || graduateExistLinkedIn){
+          return ({exist : true})
+        }else{
+          const newGraduate = new Graduate({
+            name:graduateData.name,
+            email:graduateData.email,
+            mobile:graduateData.mobile,
+            country:graduateData.country,
+            state:graduateData.state,
+            city:graduateData.city,
+            pin:graduateData.pin,
+            dob:graduateData.dob,
+            qualification:graduateData.qualification,
+            college:graduateData.college,
+            yearOfpassing:graduateData.yearOfpassing,
+            cgpa:graduateData.cgpa,
+            internship:graduateData.internship,
+            internshipDetails:graduateData.internshipdetails,
+            linkedIn:graduateData.linkedIn,
+            github:graduateData.github,
+            otherLinks:graduateData.otherLinks
+            // expectedSalary:graduateData.expectedSalary,
+            // resume:resumeResponse.Location
+          })
+
+          const newGraduateData = await newGraduate.save()
+          console.log(newGraduateData,"graaaaaaaad");
+          return ({exist:false},newGraduateData)
+        }
+    } catch (error) {
+      console.log(error);
       return { error: true };
     }
   }

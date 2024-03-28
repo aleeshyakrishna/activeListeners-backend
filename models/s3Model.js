@@ -88,11 +88,35 @@ module.exports = {
         resume: resumeResult,
         image: imageResult,
       };
+
     } catch (error) {
       console.error("Error uploading podcast:", error);
       return {error}; 
     }
   },
+  graduateResume:async(resume)=>{
+    try {
+      console.log(resume,"in s3 model");
+      const {originalname,buffer} = resume;
+
+      const keys = `graduates/${originalname}`
+
+      const graduateParams = {
+        Bucket : bucketName,
+        Key : keys,
+        Body:buffer
+      }
+
+      const graduateUploadResponse = await s3.upload(graduateParams).promise()
+      return {
+        graduateResume :graduateUploadResponse
+      }
+
+    } catch (error) {
+      console.error("Error uploading graduate:", error);
+      return {error}; 
+    }
+  }
   
 
 

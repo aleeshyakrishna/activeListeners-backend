@@ -2,6 +2,8 @@ const Psychologyst = require("../models/psychologystSchema")
 const User = require("../models/userSchema")
 const Hiring =require("../models/hiringSchema")
 const Podcast = require("../models/podcastSchema")
+const Graduates = require("../models/graduateSchema")
+const NGOs = require("../models/ngoSchema")
 
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
@@ -168,12 +170,26 @@ module.exports = {
             return ({error:true})
         }
     },
-    // update:(Id,NewStatus)=>{
-    //     try {
-    //         const updtd = await Hiring 
-    //     } catch (error) {
-    //         console.log(error);
-    //         return ({error:true})
-    //     }
-    // }
+    viewGraduates:async()=>{
+        try {
+            const allGraduates = await Graduates.find()
+            console.log(allGraduates,"Graduates");
+            return (allGraduates)
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+
+    viewNGOs:async()=>{
+        try {
+            const ngoAll = await NGOs.find()
+            console.log(ngoAll,"Graduates");
+            return (ngoAll)
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    }
+
 }

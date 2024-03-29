@@ -4,7 +4,7 @@ const Hiring =require("../models/hiringSchema")
 const Podcast = require("../models/podcastSchema")
 const Graduates = require("../models/graduateSchema")
 const NGOs = require("../models/ngoSchema")
-
+const Videos = require("../models/videoSchema")
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
 
@@ -190,6 +190,39 @@ module.exports = {
             console.log(error);
             return ({error:true})
         }
-    }
+    },
+
+    postVideo:async(videoData,s3result)=>{
+        try {
+            const saveVideo = new Videos({
+                title:videoData.title,
+                discription:videoData.discription,
+                category:videoData.category,
+                thumbnail:s3result.thumbnail.Location,
+                source:s3result.source.Location,
+            })
+            const datass =  await saveVideo.save()
+            console.log(datass,"punuuu");
+            return (datass)
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
+
+    getAllvideos:async()=>{
+        try {
+            const allVideos = await Videos.find()
+            console.log(allVideos,"oooii");
+            if(allVideos){
+                return (allVideos)
+            }else{
+                return ({notfound:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return ({error:true})
+        }
+    },
 
 }

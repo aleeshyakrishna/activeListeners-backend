@@ -40,6 +40,10 @@ router.get('/total_ngo_count',adminController.viewNGO)
 
 router.get('/registeredUser-count',adminController.findUserCount)
 
+router.post('/add_videos',upload.fields([{ name: 'thumbnail' },
+{ name: 'source' }]),adminController.addVideo)
+
+router.get('/get_allVideos',adminController.viewAllVideos)
 
 
 

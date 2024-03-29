@@ -116,7 +116,35 @@ module.exports = {
       console.error("Error uploading graduate:", error);
       return {error}; 
     }
-  }
+  },
+
+  uploadVideo: async (files) => {
+    try {
+      const { thumbnail, source } = files;
+  
+      const uploadThumbnailParams = {
+        Bucket: bucketName,
+        Key: `videos/thumbnails/${thumbnail[0].originalname}`,
+        Body: thumbnail[0].buffer,
+      };
+      const thumbnailResult = await s3.upload(uploadThumbnailParams).promise();
+  
+      const uploadSourceParams = {
+        Bucket: bucketName,
+        Key: `videos/source/${source[0].originalname}`,
+        Body: source[0].buffer,
+      };
+      const sourceResult = await s3.upload(uploadSourceParams).promise();
+  
+      return {
+        thumbnail: thumbnailResult,
+        source: sourceResult,
+      };
+    } catch (error) {
+      console.error("Error uploading videos:", error);
+      return {error}; 
+    }
+  },
   
 
 

@@ -256,4 +256,40 @@ module.exports = {
       res.status(500).json({ message: "internal server error" });
     }
   },
+
+  addVideo:async(req,res)=>{
+    try {
+      console.log(req.body, req.files, "form daaaaaaata");
+      const resp = await s3Model.uploadVideo(req.files);
+      console.log(resp, "get from s3........");
+      if (resp.error) {
+        res.json({ message: "something went wrong" });
+      } else {
+        const savePodcast = await adminHelper.postVideo(req.body, resp);
+        if (savePodcast.error) {
+          res.status(500).json({ message: "something went wrong!!" });
+        } else {
+          const msg = savePodcast.datass;
+          res.json({ message: "successfully added Video!!", msg });
+        }
+      }
+    } catch (error) {
+      res.status(500).json({message:"internal server error!!"})
+    }
+  },
+
+  viewAllVideos: async (req, res) => {
+    try {
+      const reslt = await adminHelper.getAllvideos();
+      if (reslt.error) {
+        res.statsus(500).json({ message: "internal server error!" });
+      } else if (reslt.notfound) {
+        res.status(404).json({ message: "video not available now" });
+      } else {
+        res.status(200).json({ reslt });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
 };

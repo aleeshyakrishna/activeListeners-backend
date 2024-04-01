@@ -145,7 +145,29 @@ module.exports = {
       return {error}; 
     }
   },
-  
+  uploadIcon:async(icon)=>{
+    try {
+      console.log(icon,"in s3 model");
+      const {originalname,buffer} = icon;
+
+      const keys = `package-icon/${originalname}`
+
+      const iconParams = {
+        Bucket : bucketName,
+        Key : keys,
+        Body:buffer
+      }
+
+      const iconUploadResponse = await s3.upload(iconParams).promise()
+      return {
+        iconResponse :iconUploadResponse
+      }
+
+    } catch (error) {
+      console.error("Error uploading graduate:", error);
+      return {error}; 
+    }
+  },
 
 
 };

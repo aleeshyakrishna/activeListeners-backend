@@ -5,6 +5,7 @@ const Podcast = require("../models/podcastSchema")
 const Graduates = require("../models/graduateSchema")
 const NGOs = require("../models/ngoSchema")
 const Videos = require("../models/videoSchema")
+const Packages = require("../models/packageSchema")
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
 
@@ -259,13 +260,37 @@ module.exports = {
         }
     },
 
-    uploadPackage:async(Icon,packageData)=>{
+    uploadPackage:async(s3Icon,packageData)=>{
         try {
-            const s3Result = await s3.uploadIcon(Icon)
-            console.log(s3Result);
+           
+            console.log(s3Icon,"s3 icon result",packageData,"form data remaining!!");
+            const newPackage = await new Packages({
+                package_title : packageData.title,
+                package_icon : s3Icon.iconResponse.Location,
+                days_plan :packageData.daysPlan,
+                benefits : packageData.benefits,
+                sub_benefits : packageData.subBenefits,
+                description : packageData.description,
+                price : packageData.price,
+                recommended : packageData.recommended
+            })
+
+            const newPackageAdded = await newPackage.save()
+            console.log(newPackageAdded,"beautiful");
+            return (newPackageAdded)
 
         } catch (error) {
-            console.log(error);
+            console.log(error,"iii");
+            return { error: true };
+        }
+    },
+
+    findPackage:async()=>{
+        try {
+            const results = await Packages.find()
+            console.log(results,'packages added');
+        } catch (error) {
+            console.log(error,"iii");
             return { error: true };
         }
     }

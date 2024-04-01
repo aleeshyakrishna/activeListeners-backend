@@ -48,4 +48,6 @@ router.post('/view_and_editVideo/:id',upload.fields([{ name: 'thumbnail' },
 { name: 'source' }]),adminController.updateVideo)
 
 router.post('/add_package',upload.single('icon'),adminController.addPackage)
+
+router.get('/get_all_packages',adminController.getPackages)
 module.exports = router;

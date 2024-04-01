@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const adminController = require('../controllers/adminController')
+const adminController = require('../controllers/adminController');
 const multer = require("multer")
 const storage = multer.memoryStorage()
 const upload = multer({storage:storage})
@@ -27,10 +27,9 @@ router.post(
                 { name: 'source' }]),
                 adminController.addPodcast
             );
+            router.get("/view_one_application/:_id",adminController.viewOneAppln);
 
 router.get("/view_all_podcast",adminController.viewAllPodcast);
-
-router.get("/view_one_application/:_id",adminController.viewOneAppln);
 
 router.get('/total_psychologist',adminController.viewPsychologystsCount)
 
@@ -45,6 +44,8 @@ router.post('/add_videos',upload.fields([{ name: 'thumbnail' },
 
 router.get('/get_allVideos',adminController.viewAllVideos)
 
+router.post('/view_and_editVideo/:id',upload.fields([{ name: 'thumbnail' },
+{ name: 'source' }]),adminController.updateVideo)
 
-
+router.post('/add_package',upload.single('icon'),adminController.addPackage)
 module.exports = router;

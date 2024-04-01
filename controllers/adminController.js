@@ -292,4 +292,42 @@ module.exports = {
       res.status(500).json({ message: "internal server error!" });
     }
   },
+  updateVideo: async (req, res) => {
+    try {
+      console.log(req.params.id, req.body,req.files ,"iiid");
+      
+      const resp = await s3Model.uploadVideo(req.files);
+
+      if(resp.error){
+        res.status(500).json({message:"error uploading s3"})
+      }else{
+        const Getappln = await adminHelper.GetOneVideo(req.params.id, req.body,resp);
+      console.log(Getappln, "enter into conroller");
+      if (Getappln.error || Getappln.notfind) {
+        res.json({ message: "you cant view psychologyst now" });
+        } else {
+        res.status(200).json({ Getappln });
+        // const updatedStatus = await adminHelper.update(req.params._id,req.body)
+        }
+      }
+      
+    } catch (error) {
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+  
+  addPackage : async(req,res)=>{
+    try {
+
+      console.log(req.body,req.file,"this is package adding module...");
+
+      const packageRes  = await adminHelper.uploadPackage(req.file,req.body)
+      console.log(s3response);
+
+    } catch (error) {
+      console.log(error);
+      res.status(200).json({ Getappln });
+
+    }
+  }
 };

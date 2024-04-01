@@ -7,6 +7,9 @@ const videoSchema = new mongoose.Schema({
     page:{
         type:String
     },
+    description:{
+        type:String
+    },
 
     thumbnail:{
         type:String

@@ -196,8 +196,8 @@ module.exports = {
         try {
             const saveVideo = new Videos({
                 title:videoData.title,
-                discription:videoData.discription,
-                category:videoData.category,
+                description:videoData.description,
+                page:videoData.page,
                 thumbnail:s3result.thumbnail.Location,
                 source:s3result.source.Location,
             })
@@ -224,5 +224,50 @@ module.exports = {
             return ({error:true})
         }
     },
+    GetOneVideo : async (Id, datas, s3result) => {
+        try {
+            console.log(Id, "in helper........");
+            const findAppln = await Videos.findByIdAndUpdate(
+                Id,
+                {
+                    title: datas.title,
+                    discription:datas.discription,
 
+                    page: datas.page,
+                    thumbnail: s3result.thumbnail.Location,
+                    source: s3result.source.Location
+                },
+                { new: true }
+            );
+            console.log(findAppln, "findoutttttttt");
+            if (findAppln) {
+                // Assuming Hiring is a mongoose model, if not, replace with appropriate logic
+                const upd = await Hiring.findOneAndUpdate(
+                    // Update condition for Hiring document
+                    { videoId: Id },
+                    // Update fields for Hiring document
+                    { $set: { updatedField: 'updatedValue' } },
+                    { new: true } // To return the updated document
+                );
+                return { notfind: false, video: findAppln };
+            } else {
+                return { notfind: true };
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    uploadPackage:async(Icon,packageData)=>{
+        try {
+            const s3Result = await s3.uploadIcon(Icon)
+            console.log(s3Result);
+
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    }
+    
 }

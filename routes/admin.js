@@ -50,4 +50,17 @@ router.post('/view_and_editVideo/:id',upload.fields([{ name: 'thumbnail' },
 router.post('/add_package',upload.single('icon'),adminController.addPackage)
 
 router.get('/get_all_packages',adminController.getPackages)
+
+router.get('/read_one_package/:id',adminController.getOnePackageAndEdit)
+
+router.post('/update_package/:id',upload.single('icon'),adminController.updatePackage)
+
+router.delete('/delete_package/:id',adminController.deletePackage)
+
+router.post('/add_member',upload.fields([{name:'image'},
+                            {name:'audio'}]),adminController.add_teamMember)
+
+router.get('/get_all_members',adminController.getMembers)
+
+
 module.exports = router;

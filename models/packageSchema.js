@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 
 const packageSchema = new mongoose.Schema({
+
     package_title :{
         type:String
     },
@@ -25,6 +26,7 @@ const packageSchema = new mongoose.Schema({
     recommended:{
         type:Boolean
     }
+    
 })
 
 module.exports =  mongoose.model("Packages",packageSchema)

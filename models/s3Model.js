@@ -168,6 +168,35 @@ module.exports = {
       return {error}; 
     }
   },
+  uploadMemberData:async(files)=>{
+    try {
+      console.log(files,"...");
+      const {image , audio } = files
 
+      const uploadImageParams = {
+        Bucket: bucketName,
+        Key: `our-team/members-image/${image[0].originalname}`,
+        Body: image[0].buffer,
+      };
+      const imageResult = await s3.upload(uploadImageParams).promise();
+  
+      const uploadAudioParams = {
+        Bucket: bucketName,
+        Key: `our-team/members-audio/${audio[0].originalname}`,
+        Body: audio[0].buffer,
+      };
+      const audioResult = await s3.upload(uploadAudioParams).promise();
+  
+      return {
 
+        image: imageResult,
+        audio: audioResult,
+        
+      };      
+    } catch (error) {
+      console.error("Error uploading graduate:", error);
+      return {error};
+    }
+  }
+  
 };

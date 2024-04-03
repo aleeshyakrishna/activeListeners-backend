@@ -1,10 +1,13 @@
 var adminHelper = require("../helpers/adminHelper");
+
 const s3Model = require("../models/s3Model");
 
 const adminCredential = {
+
   name: "ACTIVELISTENERS ADMIN PANEL",
   email: "admin@gmail.com",
-  password: "123",
+  password: "123"
+
 };
 
 module.exports = {
@@ -52,6 +55,8 @@ module.exports = {
       // }else{
       //     res.status(200).json({message:"successfully added psychologyst"})
       // }
+
+
     } catch (error) {
       res.status(500).json({ message: "internal server error!!" });
     }
@@ -72,9 +77,9 @@ module.exports = {
   },
   viewPsychologyst: async (req, res) => {
     try {
-      console.log(req.params._id, "iiiiiiiiiiiiiiiiiiiddd");
+      console.log(req.params._id, "id");
       const OnePsychologyst = await adminHelper.getOnePsycho(req.params._id);
-      console.log(OnePsychologyst, "enter into conroller");
+      console.log(OnePsychologyst, "enter into controller");
       if (OnePsychologyst.error || OnePsychologyst.notfind) {
         res.json({ message: "you cant view psychologyst now" });
       } else {
@@ -106,7 +111,7 @@ module.exports = {
   },
   viewUser: async (req, res) => {
     try {
-      console.log(req.params._id, "iiiiiiiiiiiiiiiiiiiddd");
+      console.log(req.params._id, "id");
       const Getuser = await adminHelper.getOneUser(req.params._id);
       console.log(Getuser, "enter into conroller");
       if (Getuser.error || Getuser.notfind) {
@@ -122,7 +127,7 @@ module.exports = {
   viewHiring: async (req, res) => {
     try {
       const response = await adminHelper.findHiring();
-      console.log(response, "ressss");
+      console.log(response, "res");
       if (response.error) {
         res
           .status(404)
@@ -138,7 +143,7 @@ module.exports = {
   },
   addPodcast: async (req, res) => {
     try {
-      console.log(req.body, req.files, "form daaaaaaata");
+      console.log(req.body, req.files, "form data");
       const resp = await s3Model.uploadPodcast(req.files);
       console.log(resp, "get from s3........");
       if (resp.error) {
@@ -172,7 +177,7 @@ module.exports = {
   },
   viewOneAppln: async (req, res) => {
     try {
-      console.log(req.params._id, req.body, "iiid");
+      console.log(req.params._id, req.body, "id");
       const Getappln = await adminHelper.GetOneappln(req.params._id, req.body);
       console.log(Getappln, "enter into conroller");
       if (Getappln.error || Getappln.notfind) {
@@ -344,6 +349,104 @@ module.exports = {
     try {
       console.log("hhehhe");
       const packageList = await adminHelper.findPackage()
+      if(packageList.empty){
+        res.json({message:"no active packages!"})
+      }else{
+        res.status(200).json({packageList})
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  getOnePackageAndEdit:async(req,res)=>{
+    try {
+      console.log(req.params.id,"Id");
+      const packageGot = await adminHelper.getPackage(req.params.id)
+      if(packageGot.notfound){
+        res.json({message:"cant found the selected package!"})
+      }else{
+        res.status(200).json({packageGot})
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  updatePackage:async(req,res)=>{
+    try {
+      const iconRes = await s3Model.uploadIcon(req.file)
+      if(iconRes.error){
+        res.status(500).json({message:"internal server error!!"})
+      }else{
+
+        const what = await adminHelper.findPackage(req.params.id,req.body,iconRes)
+        if(what.error){
+          res.json("error!!")
+        }else{
+          res.json({message:"updated successfully!!"})
+        }
+      }
+
+      
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  deletePackage:async(req,res)=>{
+    try {
+      console.log(req.params.id,"this is id");
+      const response = await adminHelper.deleteOnePackage(req.params.id)
+      console.log("got response");
+      if(response.error){
+        res.status(500).json({message:"internal server error!!"})
+      }else if(response.success){
+        res.json({message:"successfully deleted!!"})
+      }else{
+        res.json({message:"something went wrong!!"})
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  add_teamMember:async(req,res)=>{
+    try {
+      // console.log(req.body,req.files,"form data...");
+      const response = await s3Model.uploadMemberData(req.files)
+      console.log(response,"==============================");
+      if(response.error){
+        res.status(500).json({message:"Error uploading files"})
+      }else{
+        const memberData = await adminHelper.addMember(req.body,response)
+        if(memberData.error){
+          res.json({message:"internal error occurred!!"})
+        }else{
+          res.status(200).json({message:"member added successfully!!"})
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  getMembers:async(req,res)=>{
+    try {
+      const members = await adminHelper.getMembers()
+      if(members.error){
+        res.json({message:"internal server error"})
+      }
+      if(members.present){
+        res.json({members})
+      }else{
+        res.json({message:"not found!!"})
+      }
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "internal server error!" });

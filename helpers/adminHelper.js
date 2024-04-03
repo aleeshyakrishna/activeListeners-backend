@@ -6,6 +6,7 @@ const Graduates = require("../models/graduateSchema")
 const NGOs = require("../models/ngoSchema")
 const Videos = require("../models/videoSchema")
 const Packages = require("../models/packageSchema")
+const Team = require('../models/teamSchema.js')
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
 
@@ -240,7 +241,7 @@ module.exports = {
                 },
                 { new: true }
             );
-            console.log(findAppln, "findoutttttttt");
+            console.log(findAppln, "find out");
             if (findAppln) {
                 // Assuming Hiring is a mongoose model, if not, replace with appropriate logic
                 const upd = await Hiring.findOneAndUpdate(
@@ -289,8 +290,110 @@ module.exports = {
         try {
             const results = await Packages.find()
             console.log(results,'packages added');
+            if(results){
+                return (results)
+            }else{
+                return ({empty:true})
+            }
         } catch (error) {
             console.log(error,"iii");
+            return { error: true };
+        }
+    },
+
+    getPackage:async(Id)=>{
+        try {
+            const getPack = await Packages.findById({_id:Id})
+            console.log(getPack,"this is the package");
+            if(getPack){
+                return (getPack)
+            }else{
+                return({notfound:true})
+            }
+        } catch (error) {
+            console.log(error,"iii");
+            return { error: true };
+        }
+    },
+
+    
+    findPackage:async(Id,newData,Icon)=>{
+        try {
+            const findPack = await Packages.findOneAndUpdate(
+                {Id},
+                {
+              
+                
+                    package_title:newData.title,
+                    package_icon:Icon.iconResponse.Location,
+                    days_plan:newData.daysPlan,
+                    benefits:newData.benefits,
+                    sub_benefits:newData.subBenefits,
+                    description:newData.description,
+                    price:newData.price,
+                    recommended:newData.recommended,
+
+            },
+            { new: true }
+            )
+            console.log(findPack,"updated data");
+            if(findPack){
+                return ({update:true},findPack)
+            }else{
+                return ({update:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    deleteOnePackage:async(Id)=>{
+        try {
+            console.log("inside delete package helper");
+            const deletePackages = await Packages.findByIdAndDelete({_id:Id})
+            console.log(deletePackages,"deleted!!");
+            if(deletePackages){
+                return ({success:true})
+            }else{
+                return ({success:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    addMember:async(memberData,fileData)=>{
+        try {
+            const newMember = new Team({
+                name : memberData.name,
+                image:fileData.image.Location,
+                designation:memberData.designation,
+                audio:fileData.audio.Location,
+                socialmediaLink:memberData.socialMediaLink
+            })
+
+            const newMemberData = await newMember.save()
+            console.log(newMemberData,"jeenannnnnnnnnnnnnnnnnnnn");
+            return (newMemberData)
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    getMembers:async()=>{
+        try {
+            const allMembers = await Team.find()
+            if(allMembers){
+                console.log(allMembers);
+                return ({present:true,allMembers})
+            }else{
+                return ({present:false})
+            }
+        } catch (error) {
+            console.log(error);
             return { error: true };
         }
     }

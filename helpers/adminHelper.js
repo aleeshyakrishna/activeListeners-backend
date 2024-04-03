@@ -7,6 +7,7 @@ const NGOs = require("../models/ngoSchema")
 const Videos = require("../models/videoSchema")
 const Packages = require("../models/packageSchema")
 const Team = require('../models/teamSchema.js')
+const mongoose= require("mongoose")
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
 
@@ -405,6 +406,45 @@ module.exports = {
                 return ({memberData})
             }else{
                 return ({notfind:true})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    updateMember:async(Id,formData,FileData)=>{
+        try {
+            const objectId = new mongoose.Types.ObjectId(Id);
+
+            const memberExist = await Team.findByIdAndUpdate(objectId,{
+                
+                name : formData.name,
+                image:FileData.image.Location,
+                designation:formData.designation,
+                audio:FileData.audio.Location,
+                socialmediaLink:formData.socialMediaLink
+
+            },
+            {new:true}
+            )
+            return (memberExist)
+            // console.log(memberExist,"updated Data..");
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    deleteMember:async(Id)=>{
+        try {
+            console.log("inside delete member helper");
+            const deleteMember = await Team.findByIdAndDelete({_id:Id})
+            console.log(deleteMember,"deleted!!");
+            if(deleteMember){
+                return ({success:true})
+            }else{
+                return ({success:false})
             }
         } catch (error) {
             console.log(error);

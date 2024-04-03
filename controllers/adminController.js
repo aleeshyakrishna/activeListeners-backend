@@ -471,5 +471,41 @@ module.exports = {
     }
   },
 
+  updateMember:async(req,res)=>{
+    try {
+      console.log(req.params.id,req.body,req.files,"form data");
+      const response = await s3Model.uploadMemberData(req.files);
+      console.log(response, "==============================");
+      if (response.error) {
+        res.status(500).json({ message: "Error uploading files" });
+      } else {
+      const updatedData = await adminHelper.updateMember(req.params,req.body,response)
+      if(updatedData.error){
+        res.status(500).json({message:"internal server error!!"})
+      }else{
+        res.status(200).json({message:"updated successfully!!",updatedData})
+      }
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: "internal server error!" });
+    }
+  },
+
+  deleteMember:async(req,res)=>{
+    try{
+      const response = await adminHelper.deleteMember(req.params.id)
+      if(response.error){
+        res.status(500).json({message:"internal server error!!"})
+      }else if(response.success){
+        res.status(200).json({message:"deleted successfully!!"})
+      }else{
+                res.status(200).json({message:"Please try again later!!"})
+      }
+    }catch(error){
+      console.log(error);
+      res.status(500).json({ msg: "internal server error!" });
+    }
+  }
 
 };

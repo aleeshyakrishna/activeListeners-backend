@@ -375,7 +375,7 @@ module.exports = {
             })
 
             const newMemberData = await newMember.save()
-            console.log(newMemberData,"jeenannnnnnnnnnnnnnnnnnnn");
+            console.log(newMemberData,"new member ");
             return (newMemberData)
         } catch (error) {
             console.log(error);
@@ -391,6 +391,20 @@ module.exports = {
                 return ({present:true,allMembers})
             }else{
                 return ({present:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    view_Member:async(Id)=>{
+        try {
+            const memberData = await Team.findById({_id:Id})
+            if(memberData){
+                return ({memberData})
+            }else{
+                return ({notfind:true})
             }
         } catch (error) {
             console.log(error);

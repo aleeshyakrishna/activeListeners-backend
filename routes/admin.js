@@ -62,5 +62,8 @@ router.post('/add_member',upload.fields([{name:'image'},
 
 router.get('/get_all_members',adminController.getMembers)
 
+//after creating api , you have to push into git hub..!!
+router.get('/view_one_member/:id',adminController.viewMember)
+
 
 module.exports = router;

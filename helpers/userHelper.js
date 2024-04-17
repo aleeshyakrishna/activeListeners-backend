@@ -1,25 +1,25 @@
 //node
 const nodemailer = require("nodemailer");
-// const transporter = nodemailer.createTransport({
-//   service: "gmail",
-//   auth: {
-//     user: "activelisteners2024@gmail.com",
-//     pass: "hnfu dctk unet cgeh",
-//   },
-//   secure: false, // Set this to false to use 'PLAIN' authentication
-//   authMethod: "PLAIN", // Specify the authentication method here
-// });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "activelisteners2024@gmail.com",
+    pass: "fplz vslj pgka fnif",
+  },
+  secure: false, // Set this to false to use 'PLAIN' authentication
+  authMethod: "PLAIN", // Specify the authentication method here
+});
 
 // Verify the transporter configuration
 
-// transporter.verify((error, success) => {
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log("Ready for messages");
-//     console.log(success);
-//   }
-// });
+transporter.verify((error, success) => {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Ready for messages");
+    console.log(success);
+  }
+});
 
 const bcrypt = require("bcrypt");
 const saltRounds = 10;

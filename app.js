@@ -28,8 +28,8 @@ app.use(cors({
   origin: [
       'http://localhost:3000',
       'http://localhost:3001',
-     'https://activelistenerss-frontendd-updated.vercel.app/',
-      "http://activelistenerss-frontendd.vercel.app",
+     'https://activelistenerss-frontendd-updated.vercel.app',
+      // "http://activelistenerss-frontendd.vercel.app",
       
   ], // Update with your client's origin
   methods: ["GET", "POST", "PUT", "DELETE"],

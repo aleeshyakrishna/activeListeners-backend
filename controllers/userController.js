@@ -2,7 +2,6 @@ const userHelper = require("../helpers/userHelper");
 const twilio = require("../utils/twilio");
 const s3Model = require("../models/s3Model");
 module.exports = {
-  
   getHome: (req, res) => {
     try {
       res.status(200).json({ message: "welcome to Active Listeners!!" });
@@ -181,7 +180,7 @@ module.exports = {
     try {
       console.log(req.body, req.file, "hiring formmm.........");
       const result = await s3Model.uploadFile(req.file);
-      console.log(result, "after s3 storing.......");
+      console.log(result, "after s3 stroing.......");
       if (result) {
         await userHelper.postResume(req.body, result).then((result) => {
           res
@@ -192,7 +191,7 @@ module.exports = {
             });
         });
       } else {
-        res.status(204).json({ message: "something went wrong!!" });
+        res.json({ message: "something went wrong!!" });
       }
     } catch (error) {
       res.status(500).json({ message: "Internal sever error!!" });

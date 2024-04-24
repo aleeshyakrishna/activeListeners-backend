@@ -68,6 +68,7 @@ router.post('/update_member/:id',upload.fields([{name:'image'},
 
 router.delete('/delete_member/:id',adminController.deleteMember)
 
+router.get('/view_getInTouch',adminController.displayGetintouch)
 //after creating api , you have to push into git hub..!!
 
 module.exports = router;

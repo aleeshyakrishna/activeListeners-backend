@@ -25,7 +25,7 @@ const psychologystSchema = new mongoose.Schema({
     resume:{
         type:String
     },
-    discription:{
+    description:{
         type:String
     },
     image:{

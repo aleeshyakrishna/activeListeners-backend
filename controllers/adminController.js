@@ -506,6 +506,23 @@ module.exports = {
       console.log(error);
       res.status(500).json({ msg: "internal server error!" });
     }
+  },
+
+  displayGetintouch:async(req,res)=>{
+    try {
+      const getintouch = await adminHelper.getGetintouch();
+      if (getintouch.error) {
+        res.json({ message: "internal server error" });
+      }
+      if (getintouch.present) {
+        res.json({ getintouch });
+      } else {
+        res.json({ message: "not found!!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ msg: "internal server error!" });
+    }
   }
 
 };

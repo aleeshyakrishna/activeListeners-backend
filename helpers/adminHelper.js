@@ -7,6 +7,7 @@ const NGOs = require("../models/ngoSchema")
 const Videos = require("../models/videoSchema")
 const Packages = require("../models/packageSchema")
 const Team = require('../models/teamSchema.js')
+const GetinTouch = require('../models/getInTouch.js')
 const mongoose= require("mongoose")
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
@@ -34,7 +35,7 @@ module.exports = {
                     available:psychologystData.available,
                     resume:respv.resume.Location,
                     image:respv.image.Location,
-                    discription:psychologystData.discription
+                    description:psychologystData.discription
                 })
     
                 const Psycho =await newPsycho.save()
@@ -445,6 +446,21 @@ module.exports = {
                 return ({success:true})
             }else{
                 return ({success:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    getGetintouch:async()=>{
+        try {
+            const allGet = await GetinTouch.find()
+            if(allGet){
+                console.log(allGet);
+                return ({present:true,allGet})
+            }else{
+                return ({present:false})
             }
         } catch (error) {
             console.log(error);

@@ -322,6 +322,24 @@ module.exports = {
     }
   },
 
+  deleteVideo:async()=>{
+    try {
+      console.log(req.params.id, "this is id");
+      const response = await adminHelper.deleteOneVideo(req.params.id);
+      console.log("got response");
+      if (response.error) {
+        res.status(500).json({ message: "internal server error!!" });
+      } else if (response.success) {
+        res.json({ message: "successfully deleted!!" });
+      } else {
+        res.json({ message: "something went wrong!!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
   addPackage: async (req, res) => {
     try {
       console.log(req.body, req.file, "this is package adding module...");

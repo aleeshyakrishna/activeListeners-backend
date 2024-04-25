@@ -350,6 +350,22 @@ module.exports = {
         }
     },
 
+    deleteOneVideo:async(Id)=>{
+        try {
+            console.log("inside delete package helper");
+            const deleteVideo = await Videos.findByIdAndDelete({_id:Id})
+            console.log(deleteVideo,"deleted!!");
+            if(deleteVideo){
+                return ({success:true})
+            }else{
+                return ({success:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
     deleteOnePackage:async(Id)=>{
         try {
             console.log("inside delete package helper");

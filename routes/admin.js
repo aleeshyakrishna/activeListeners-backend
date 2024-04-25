@@ -47,6 +47,8 @@ router.get('/get_allVideos',adminController.viewAllVideos)
 router.post('/view_and_editVideo/:id',upload.fields([{ name: 'thumbnail' },
 { name: 'source' }]),adminController.updateVideo)
 
+router.delete('/delete_one_video/:id',adminController.deleteVideo)
+
 router.post('/add_package',upload.single('icon'),adminController.addPackage)
 
 router.get('/get_all_packages',adminController.getPackages)

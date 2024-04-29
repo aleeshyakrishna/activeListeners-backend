@@ -319,7 +319,7 @@ module.exports = {
     },
 
     
-    findPackage:async(Id,newData,Icon)=>{
+    findPackages:async(Id,newData,Icon)=>{
         try {
             const findPack = await Packages.findOneAndUpdate(
                 {Id},

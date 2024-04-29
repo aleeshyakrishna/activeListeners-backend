@@ -322,7 +322,7 @@ module.exports = {
     }
   },
 
-  deleteVideo:async()=>{
+  deleteVideo:async(req,res)=>{
     try {
       console.log(req.params.id, "this is id");
       const response = await adminHelper.deleteOneVideo(req.params.id);
@@ -399,7 +399,7 @@ module.exports = {
       if (iconRes.error) {
         res.status(500).json({ message: "internal server error!!" });
       } else {
-        const what = await adminHelper.findPackage(
+        const what = await adminHelper.findPackages(
           req.params.id,
           req.body,
           iconRes

@@ -139,7 +139,7 @@ module.exports = {
         const token = jwt.sign(
           { userId, userName }, // Wrap the payload in an object
           jwt_token,
-          { expiresIn: "1h" }
+          { expiresIn: "2m" }
         );
 
         return token;

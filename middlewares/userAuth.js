@@ -10,7 +10,7 @@ function authenticateToken(req, res, next) {
 
   if (!token) {
     console.error("No token provided");
-    return res.status(401).json({ message: "Please register to continue" });
+    return res.status(401).json({ message: "Please login/register to continue" });
   }
 
   jwt.verify(token.split(" ")[1], jwt_token, (err, user) => {

@@ -368,7 +368,7 @@ module.exports = {
 
     deleteOnePodcast:async(Id)=>{
         try {
-            console.log("inside delete package helper");
+            console.log("inside delete helper");
             const deletePod = await Podcast.findByIdAndDelete({_id:Id})
             console.log(deletePod,"deleted!!");
             if(deletePod){

@@ -31,7 +31,7 @@ router.post(
 
 router.get("/view_all_podcast",adminController.viewAllPodcast);
 
-router.delete('/delete_one_podcast',adminController.deletePodcast)
+router.delete('/delete_one_podcast/:id',adminController.deletePodcast)
 
 router.get('/total_psychologist',adminController.viewPsychologystsCount)
 

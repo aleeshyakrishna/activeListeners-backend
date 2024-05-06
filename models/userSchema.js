@@ -16,6 +16,13 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type:String
+    },
+    gender:{
+        type:String
+    },
+    profilePic:{
+        type:String,
+        default:null
     }
    
 },

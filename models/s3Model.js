@@ -197,6 +197,29 @@ module.exports = {
       console.error("Error uploading graduate:", error);
       return {error};
     }
+  },
+
+  profileUpload:async(profilePic)=>{
+    try {
+      console.log(profilePic,"in s3 model");
+      const {originalname,buffer} = profilePic;
+
+      const keys = `usersProfile/${originalname}`
+
+      const profileParams = {
+        Bucket : bucketName,
+        Key : keys,
+        Body:buffer
+      }
+
+      const profileUploadResponse = await s3.upload(profileParams).promise()
+      return {
+        userProfilePic :profileUploadResponse
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      return {error};
+    }
   }
   
 };

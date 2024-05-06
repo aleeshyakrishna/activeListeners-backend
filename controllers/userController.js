@@ -179,20 +179,29 @@ module.exports = {
   applicatonForm: async (req, res) => {
     try {
       console.log(req.body, req.file, "hiring formmm.........");
-      const result = await s3Model.uploadFile(req.file);
+      const ressss= await userHelper.checkExist(req.body)
+      console.log(ressss,"resssssssssssssssssssssssssssssssss");
+      if(ressss.error){
+        res.status(500).json({message:"Something went wrong!!"})
+      }else if(ressss.alreadyExist){
+        res.json({message:"You are already applied for this position!"})
+      }else{
+        const result = await s3Model.uploadFile(req.file);
       console.log(result, "after s3 stroing.......");
       if (result) {
         await userHelper.postResume(req.body, result).then((result) => {
           res
             .status(200)
             .json({
-              message: "successfully submitted the application form!",
+              message: "Successfully submitted the application form!",
               result,
             });
         });
       } else {
-        res.json({ message: "something went wrong!!" });
+        res.json({ message: "Something went wrong!!" });
       }
+      }
+      
     } catch (error) {
       res.status(500).json({ message: "Internal sever error!!" });
     }
@@ -227,6 +236,11 @@ module.exports = {
     try {
       console.log(req.params.id, "id");
       console.log(req.body, ".......");
+      // const {formData} = req.body
+      // console.log(formData,"{{");
+      if(!req.body){
+        console.log("no data ")
+      }
       const Getuser = await userHelper.getOneUserAndUpdate(req.params.id, req.body);
       console.log(Getuser, "userdata updated");
       if (Getuser.notfind) {
@@ -234,11 +248,34 @@ module.exports = {
       } else if (Getuser.error) {
         res.json({ message: "internal server error!!" });
       } else if (Getuser.update) {
+        const dataUp = Getuser.update.updatedUser
         res
           .status(200)
-          .json({ message: "Your profile updated successfully!!" });
+          .json({ message: "Your profile updated successfully!!",dataUp });
       } else {
-        res.status(404).json({ message: "please try again later!!" });
+        res.status(500).json({ message: "please try again later!!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error" });
+    }
+  },
+
+  addProfilePic:async(req,res)=>{
+    try {
+      console.log(req.params.id, "id",req.file,"profile photo");
+      const userProf = await s3Model.profileUpload(req.file)
+      console.log(userProf,"s3 result for uploading profile picture");
+      if(userProf.error){
+        res.json({message:"Error Uploading Profile picture!!"})
+      }else{
+        const resultts = await userHelper.addProfilePicture(userProf,req.params.id)
+        if(resultts.error){
+          res.status(500).json({message:"Internal server error!!"})
+        }else if(resultts.success){
+          const updatedData=resultts.checkUser
+          res.status(200).json({message:"profile picture updated!!",updatedData})
+        }
       }
     } catch (error) {
       console.log(error);

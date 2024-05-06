@@ -99,6 +99,7 @@ module.exports = {
         email: userData.email,
         mobile: userData.phoneNumber,
         password: hashedPassword,
+        gender:userData.gender,
       });
       const userCreated = await newUser.save();
       return userCreated;
@@ -137,9 +138,9 @@ module.exports = {
       if (jwt_token) {
         console.log(userId, userName, jwt_token, ".........>");
         const token = jwt.sign(
-          { userId, userName }, // Wrap the payload in an object
+          { userId, userName }, 
           jwt_token,
-          { expiresIn: "2m" }
+          { expiresIn: "10m" }
         );
 
         return token;
@@ -2058,6 +2059,21 @@ module.exports = {
       return { error: true };
     }
   },
+  checkExist:async(data)=>{
+    try {
+      const existApplnEmail = await hiring.findOne({email:data.email})
+      const existApplnPos = await hiring.findOne({position:data.position})
+
+      if(existApplnEmail && existApplnPos){
+        return ({alreadyExist :true})
+      }else{
+        return ({alreadyExist :false})
+      }
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
 
   postResume: async (data, s3Result) => {
     try {
@@ -2101,26 +2117,71 @@ module.exports = {
       return { error: true };
     }
   },
+  // getOneUserAndUpdate: async (Id, updatedProfileData) => {
+
+
+  //   try {
+  //     console.log(Id,updatedProfileData, "in helper........");
+  //     const findUser = await User.findOne({ _id: Id });
+  //     console.log(findUser, "findoutttttttt");
+  //     if (findUser) {
+  //       const updatedUser = await User.findByIdAndUpdate(
+  //         Id,
+  //         updatedProfileData,
+  //         { new: true }
+  //       );
+
+  //       console.log(updatedUser, "updated daaaaaaaaaata..........");
+  //       if (updatedUser) {
+  //         return { update: true, updatedUser };
+  //       } else {
+  //         return { update: false };
+  //       }
+  //     } else {
+  //       return { notfind: true };
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     return { error: true };
+  //   }
+  // },
+
   getOneUserAndUpdate: async (Id, updatedProfileData) => {
     try {
-      console.log(Id, "in helper........");
-      const findUser = await User.findOne({ _id: Id });
-      console.log(findUser, "findoutttttttt");
-      if (findUser) {
+        console.log(Id, updatedProfileData, "in helper........");
         const updatedUser = await User.findByIdAndUpdate(
-          Id,
-          updatedProfileData,
-          { new: true }
+            Id,
+            {
+                name: updatedProfileData.username,
+                email: updatedProfileData.email,
+                mobile: updatedProfileData.phone
+            },
+            { new: true } // Set to true to return the updated document
         );
+        console.log(updatedUser, "data updated!!");
+        if(updatedUser){
 
-        console.log(updatedUser, "updated daaaaaaaaaata..........");
-        if (updatedUser) {
-          return { update: true, updatedUser };
-        } else {
-          return { update: false };
+          return {update: true,updatedUser}; // Return the updated user
+        }else{
+          return { notfind: true,update:false };
         }
-      } else {
-        return { notfind: true };
+    } catch (error) {
+        console.error(error);
+        // Return error if any
+        return { error: true };
+    }
+},
+
+  addProfilePicture:async(profileData,Id)=>{
+    try {
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { profilePic: profileData.userProfilePic.Location },
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User profile picture updated:", checkUser);
+        return { success: true,checkUser };
       }
     } catch (error) {
       console.log(error);

@@ -1,10 +1,12 @@
 var express = require('express');
+const bodyParser = require('body-parser');
 var router = express.Router();
+
 var userController = require('../controllers/userController')
 const multer = require("multer")
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const authentication = require("../middlewares/userAuth")
+const authenticateToken = require("../middlewares/userAuth")
 
 //get home page
 router.get('/', userController.getHome);
@@ -31,10 +33,12 @@ router.post('/get_in_touch',userController.postGetInTouch)
 router.post('/application',upload.single('resume'),userController.applicatonForm)
 
 //get my account
-router.get('/my_profile/:id',userController.getProfile)
+router.get('/my_profile/:id',authenticateToken.authenticateToken,userController.getProfile)
 
 //edit user profile
 router.put('/edit_my_profile/:id',userController.editProfile)
+
+router.post('/add_profile_photo/:id',upload.single('profilePic'),userController.addProfilePic)
 
 //delete user account
 router.delete('/delete_account/:id',userController.deleteAccount)

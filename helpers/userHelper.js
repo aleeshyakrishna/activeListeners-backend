@@ -2146,31 +2146,153 @@ module.exports = {
   //   }
   // },
 
-  getOneUserAndUpdate: async (Id, updatedProfileData) => {
-    try {
-        console.log(Id, updatedProfileData, "in helper........");
-        const updatedUser = await User.findByIdAndUpdate(
+//   getOneUserAndUpdate: async (Id, updatedProfileData) => {
+//     try {
+//         console.log(Id, updatedProfileData, "in helper........");
+//         const currentData = await User.findById({_id:Id})
+
+//         const userEmail = currentData.email
+//         const userPhone = currentData.mobile
+
+//         const updateEmail =updatedProfileData.email
+//         const updateMobile =updatedProfileData.phone
+
+//         if(userEmail == updateEmail && userPhone==updateMobile){
+//           console.log("email and mobile no chnage,continue updating directly");
+//         }else if(userEmail !== updateEmail && userPhone !== updateMobile){
+//           console.log("email and mobile both different,direct update");
+//         }
+//          else{
+//           console.log("diffff")
+//           if(userEmail == updateEmail){
+//             existMobile = await User.findOne({mobile:updateMobile})
+//             if(existMobile){
+//               console.log("already exist with ths mobile,camt update")
+//               // return ({mobileExist:true})
+//             }else{
+//               console.log("continue to update Mobile")
+//             }
+//           }else if(userPhone == updateMobile){
+//             existEmail = await User.findOne({email:updateEmail})
+//             if(existEmail){
+//               console.log("exisiting email..cant update")
+//               // return ({emailExist:true})
+//             }else {
+//               console.log("continue to update..")
+//             }
+            
+
+//             }else if(userEmail !== updateEmail){
+//               existMobile = await User.findOne({mobile:updateMobile})
+//               if(existMobile){
+//                 console.log("already exist with ths mobile")
+//                 // return ({mobileExist:true})
+//               }else{
+//                 console.log("update Mobile")
+//               }
+//           }
+//         }
+//         // const updatedUser = await User.findByIdAndUpdate(
+//         //     Id,
+//         //     {
+//         //         name: updatedProfileData.username,
+//         //         email: updatedProfileData.email,
+//         //         mobile: updatedProfileData.phone
+//         //     },
+//         //     { new: true } // Set to true to return the updated document
+//         // );
+//         // console.log(updatedUser, "data updated!!");
+//         // if(updatedUser){
+
+//         //   return {update: true,updatedUser}; // Return the updated user
+//         // }else{
+//         //   return { notfind: true,update:false };
+//         // }
+//     } catch (error) {
+//         console.error(error);
+//         // Return error if any
+//         return { error: true };
+//     }
+// },
+
+getOneUserAndUpdate: async (Id, updatedProfileData) => {
+  try {
+      console.log(Id, updatedProfileData, "in helper........");
+      
+      // Fetch the current user data
+      const currentData = await User.findById(Id);
+      if (!currentData) {
+          console.log("User not found");
+          return { notFound: true };
+      }
+      
+      // Extract current email and mobile
+      const userEmail = currentData.email;
+      const userPhone = currentData.mobile;
+      const userName = currentData.name
+
+      // Extract updated email and mobile
+      const updatedEmail = updatedProfileData.email;
+      const updatedMobile = updatedProfileData.phone;
+      const updatedName =updatedProfileData.username
+      // Check if both email and mobile are different
+      if(userEmail == updatedEmail && userPhone == updatedMobile && userName==updatedName){
+        console.log("no changes..")
+        return {noChange:true}
+      }
+
+      if (userEmail !== updatedEmail || userPhone !== updatedMobile) {
+          console.log("Either email or mobile is different, checking existing...");
+
+          // Check if email is different and exists
+          if (userEmail !== updatedEmail) {
+              const existingEmail = await User.findOne({ email: updatedEmail });
+              if (existingEmail) {
+                  console.log("Existing email, cannot update");
+                  return { emailExist: true };
+              }
+          }
+
+          // Check if mobile is different and exists
+          if (userPhone !== updatedMobile) {
+              const existingMobile = await User.findOne({ mobile: updatedMobile });
+              if (existingMobile) {
+                  console.log("Existing mobile number, cannot update");
+                  return { mobileExist: true };
+              }
+          }
+
+          // Update the user
+          const updatedUser = await User.findByIdAndUpdate(
+              Id,
+              {
+                  name: updatedProfileData.username,
+                  email: updatedEmail,
+                  mobile: updatedMobile
+              },
+              { new: true }
+          );
+          console.log("Data updated:", updatedUser);
+          return { update: true, updatedUser };
+      } else {
+          console.log("Both email and mobile are same, direct update");
+          const updatedUser = await User.findByIdAndUpdate(
             Id,
             {
                 name: updatedProfileData.username,
-                email: updatedProfileData.email,
-                mobile: updatedProfileData.phone
+                
             },
-            { new: true } // Set to true to return the updated document
+            { new: true }
         );
-        console.log(updatedUser, "data updated!!");
-        if(updatedUser){
-
-          return {update: true,updatedUser}; // Return the updated user
-        }else{
-          return { notfind: true,update:false };
-        }
-    } catch (error) {
-        console.error(error);
-        // Return error if any
-        return { error: true };
-    }
+          return { update: true,updatedUser };
+      }
+  } catch (error) {
+      console.error(error);
+      return { error: true };
+  }
 },
+
+
 
   addProfilePicture:async(profileData,Id)=>{
     try {

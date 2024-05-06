@@ -36,7 +36,7 @@ router.post('/application',upload.single('resume'),userController.applicatonForm
 router.get('/my_profile/:id',authenticateToken.authenticateToken,userController.getProfile)
 
 //edit user profile
-router.put('/edit_my_profile/:id',userController.editProfile)
+router.put('/edit_my_profile/:id',authenticateToken.authenticateToken,userController.editProfile)
 
 router.post('/add_profile_photo/:id',upload.single('profilePic'),userController.addProfilePic)
 

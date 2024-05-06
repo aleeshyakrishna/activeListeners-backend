@@ -232,34 +232,73 @@ module.exports = {
     }
   },
 
+  // editProfile: async (req, res) => {
+  //   try {
+  //     console.log(req.params.id, "id");
+  //     console.log(req.body, ".......");
+  //     // const {formData} = req.body
+  //     // console.log(formData,"{{");
+  //     if(!req.body){
+  //       console.log("no data ")
+  //     }
+  //     const Getuser = await userHelper.getOneUserAndUpdate(req.params.id, req.body);
+  //     console.log(Getuser, "userdata updated");
+  //     if (Getuser.notfind) {
+  //       res.json({ message: "please try again later!" });
+  //     } else if (Getuser.error) {
+  //       res.json({ message: "internal server error!!" });
+  //     } else if (Getuser.update) {
+  //       const dataUp = Getuser.update.updatedUser
+  //       res
+  //         .status(200)
+  //         .json({ message: "ok",user:dataUp });
+  //     } else {
+  //       res.status(500).json({ message: "no" });
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).json({ message: "error" });
+  //   }
+  // },
+
+
   editProfile: async (req, res) => {
     try {
-      console.log(req.params.id, "id");
-      console.log(req.body, ".......");
-      // const {formData} = req.body
-      // console.log(formData,"{{");
-      if(!req.body){
-        console.log("no data ")
-      }
-      const Getuser = await userHelper.getOneUserAndUpdate(req.params.id, req.body);
-      console.log(Getuser, "userdata updated");
-      if (Getuser.notfind) {
-        res.json({ message: "please try again later!" });
-      } else if (Getuser.error) {
-        res.json({ message: "internal server error!!" });
-      } else if (Getuser.update) {
-        const dataUp = Getuser.update.updatedUser
-        res
-          .status(200)
-          .json({ message: "Your profile updated successfully!!",dataUp });
-      } else {
-        res.status(500).json({ message: "please try again later!!" });
-      }
+        console.log(req.params.id, "id");
+        console.log(req.body, ".......");
+        
+        // Check if request body contains data
+        if (!req.body) {
+            console.log("No data received");
+            return res.status(400).json({ message: "No data received" });
+        }
+
+        // Call helper function to update user profile
+        const updatedUserData = await userHelper.getOneUserAndUpdate(req.params.id, req.body);
+        console.log(updatedUserData, "userdata updated");
+
+        // Handle different scenarios based on the response from the helper function
+        if (updatedUserData.notFound) {
+            return res.status(404).json({ message: "User not found" });
+        } else if (updatedUserData.error) {
+            return res.status(500).json({ message: "Internal server error" });
+        } else if (updatedUserData.noChange) {
+            return res.status(200).json({ message: "No changes made to the user profile" });
+        } else if (updatedUserData.emailExist) {
+            return res.status(409).json({ message: "Email already exists" });
+        } else if (updatedUserData.mobileExist) {
+            return res.status(409).json({ message: "Mobile number already exists" });
+        } else if (updatedUserData.update && updatedUserData.updatedUser) {
+            const updatedUser = updatedUserData.updatedUser;
+            return res.status(200).json({ message: "Profile updated successfully", user: updatedUser });
+        } else {
+            return res.status(500).json({ message: "Unknown error occurred" });
+        }
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "internal server error" });
+        console.error(error);
+        return res.status(500).json({ message: "Internal server error" });
     }
-  },
+},
 
   addProfilePic:async(req,res)=>{
     try {

@@ -30,6 +30,7 @@ const hiring = require("../models/hiringSchema");
 const Podcast = require("../models/podcastSchema");
 const NGO = require("../models/ngoSchema")
 const Graduate = require("../models/graduateSchema")
+const OtherPsychologist = require("../models/othePsycholgistSchema")
 var http = require('http');
 const https = require('https');
 
@@ -85,17 +86,28 @@ module.exports = {
   userRegistration: async (userData) => {
     try {
       console.log(userData, "daaaaataaaaaaaaaa helper");
+      if(userData.username){
+        var name=userData.username
+      }else{
+       var name =userData.name
+      }
+      
       const emailExist = await User.findOne({ email: userData.email });
       const mobileExist = await User.findOne({ mobile: userData.phoneNumber });
-      if (emailExist || mobileExist) {
+      if ((emailExist || mobileExist) && (emailExist !== null || mobileExist !== null)) {
         console.log("exists user", emailExist, mobileExist);
         return { Exist: true };
       }
       // console.log("not exists..");
-      const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+      if(userData.password){
+
+        var hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+      }else{
+        hashedPassword = null
+      }
       // console.log("llll");
       const newUser = new User({
-        name: userData.name,
+        name: name,
         email: userData.email,
         mobile: userData.phoneNumber,
         password: hashedPassword,
@@ -108,6 +120,39 @@ module.exports = {
       return { error: true };
     }
   },
+
+  userRegistrationWithGoogle: async (userData) => {
+    try {
+      console.log(userData, "daaaaataaaaaaaaaa helper with google");
+
+      
+      const emailExist = await User.findOne({ email: userData.email });
+      // const mobileExist = await User.findOne({ mobile: userData.phoneNumber });
+      if (emailExist) {
+        console.log("exists user", emailExist);
+        return { Exist: true };
+      }
+      const  hashedPassword = null
+      const phoneNumber = null
+      
+      // console.log("llll");
+      const newUser = new User({
+        name: userData.name,
+        email: userData.email,
+        mobile: phoneNumber,
+        password: hashedPassword,
+        profilePic:userData.picture,
+        gender:null,
+      });
+      const userCreated = await newUser.save();
+      return userCreated;
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
+
+
   userSignin: async (signIndata) => {
     try {
       console.log("helperrrrrrrr", signIndata);
@@ -125,6 +170,22 @@ module.exports = {
         } else {
           return { PassError: true };
         }
+      } else {
+        console.log("not exist");
+        return { exist: false };
+      }
+    } catch (error) {
+      return { error: true };
+    }
+  },
+  userSigninWithGoogle: async (signIndata) => {
+    try {
+      console.log("helperrrrrrrr", signIndata);
+      var userExist = await User.findOne({ email: signIndata.email });
+      console.log(userExist, "lllllllllllll");
+      if (userExist) {
+        console.log(userExist, "iiiii");
+          return { exist: true, userExist };
       } else {
         console.log("not exist");
         return { exist: false };
@@ -2424,5 +2485,42 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
       console.log(error);
       return { error: true };
     }
+  },
+  ApplyingPsychologyst:async(psychologystData,respv)=>{
+    try {
+      console.log(psychologystData,respv,"poioopoi");
+      
+      const PsychoExist = await OtherPsychologist.findOne({email:psychologystData.email})
+      const mobileExist =await OtherPsychologist.findOne({mobile:psychologystData.mobile})
+      console.log(PsychoExist,"existing....");
+    
+      if(PsychoExist || mobileExist){
+          console.log("existing already................");
+          // res.json({message:"Psychologyst alredy existing!"})
+          return({Exist:true})
+      }else{
+          console.log("intooooooooooooooooo");
+          const newPsycho =await new OtherPsychologist({
+              name:psychologystData.name,
+              email:psychologystData.email,
+              mobile:psychologystData.mobile,
+              city:psychologystData.city,
+              state:psychologystData.state,
+              gender:psychologystData.gender,
+              available:psychologystData.available,
+              resume:respv.resume.Location,
+              image:respv.image.Location,
+              description:psychologystData.discription
+          })
+
+          const Psycho =await newPsycho.save()
+          console.log(Psycho,"datas in helper psyhcp");
+          return(Psycho)
+      }
+      
+  } catch (error) {
+      console.log(error);
+      return({error:true})
+  }
   }
 };

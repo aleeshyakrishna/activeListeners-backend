@@ -12,48 +12,94 @@ module.exports = {
 
   registerUser: async (req, res) => {
     try {
-      await userHelper.userRegistration(req.body).then((response) => {
-        if (response.Exist) {
-          res.json({ message:"user Exist!please login!!"});
-        } else {
-          res.status(200).json({ message: "user registered successfully!!" });
-        }
-      });
-    } catch (error) {
+      console.log(req.body,"..............................")
+      if(req.body.iss){
+        console.log("kkkk")
+        await userHelper.userRegistrationWithGoogle(req.body).then((response) => {
+          if (response.Exist) {
+            res.json({ message:"user Exist!please login!!"});
+          } else {
+            res.status(200).json({ message: "user registered successfully!!" });
+          }
+        });
+      }else{
+        console.log("kkoooo")
+        await userHelper.userRegistration(req.body).then((response) => {
+          if (response.Exist) {
+            res.json({ message:"user Exist!please login!!"});
+          } else {
+            res.status(200).json({ message: "user registered successfully!!" });
+          }
+        })
+      }
+    }catch (error) {
       res.status(500).json({ message: "internal server error!" });
     }
   },
 
   signinUser: async (req, res) => {
     try {
-      // console.log(req.body, "kooooooooooooooiii");
-      await userHelper.userSignin(req.body).then((response) => {
-        if (response.error) {
-          res.status(500).json({ message: "something went wrong!!" });
-        }else if (response.PassError) {
-          res.json({ message: "invalid password or id" });
-        }
-        else if (response.exist) {
-           // console.log(response.userExist, "response");
-           const user = response.userExist;
-           const username = response.userExist.name;
-           const userid = response.userExist._id;
-           // console.log(userid, username, "peeeeeeeeeeeeeeee");
- 
-           const Token = userHelper.createToken(userid.toString(), username);
-           // console.log(Token, "this is tokennnnnnnn");
- 
-           res.status(200).json({
-             message: "user successfully logedIn",
-             user,
-             status: true,
-             Token,
-           });
-        } else {
-          res.json({ message: "User not found!!" });
-         
-        }
-      });
+      console.log(req.body, "kooooooooooooooiii");
+      if(req.body.iss){
+          console.log("hehhee")
+          await userHelper.userSigninWithGoogle(req.body).then((response) => {
+            if (response.error) {
+              res.status(500).json({ message: "something went wrong!!" });
+            }else if (response.PassError) {
+              res.json({ message: "invalid password or id" });
+            }
+            else if (response.exist) {
+               // console.log(response.userExist, "response");
+               const user = response.userExist;
+               const username = response.userExist.name;
+               const userid = response.userExist._id;
+               // console.log(userid, username, "peeeeeeeeeeeeeeee");
+     
+               const Token = userHelper.createToken(userid.toString(), username);
+               // console.log(Token, "this is tokennnnnnnn");
+     
+               res.status(200).json({
+                 message: "user successfully logedIn",
+                 user,
+                 status: true,
+                 Token,
+               });
+            } else {
+              res.json({ message: "User not found!!" });
+             
+            }
+          });
+      }else{
+
+        await userHelper.userSignin(req.body).then((response) => {
+          if (response.error) {
+            res.status(500).json({ message: "something went wrong!!" });
+          }else if (response.PassError) {
+            res.json({ message: "invalid password or id" });
+          }
+          else if (response.exist) {
+             // console.log(response.userExist, "response");
+             const user = response.userExist;
+             const username = response.userExist.name;
+             const userid = response.userExist._id;
+             // console.log(userid, username, "peeeeeeeeeeeeeeee");
+   
+             const Token = userHelper.createToken(userid.toString(), username);
+             // console.log(Token, "this is tokennnnnnnn");
+   
+             res.status(200).json({
+               message: "user successfully logedIn",
+               user,
+               status: true,
+               Token,
+             });
+          } else {
+            res.json({ message: "User not found!!" });
+           
+          }
+        });
+      }
+
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "internal server error!!" });
@@ -405,9 +451,33 @@ module.exports = {
       }
       
     } catch (error) {
-      res.status(500).json({message:"Registration completed successfully!!!"},GraduateResponse)
+      res.status(500).json({message:"internal server error!!!"})
     }
   },
+
+  joinPsychologist:async(req,res)=>{
+    try {
+      console.log("req",req.body)
+      var respv = await s3Model.joiningPsycho(req.files);
+      if (respv.error) {
+        res.json({ message: "something went wrong" });
+      } else {
+        const psychologist = await userHelper.ApplyingPsychologyst(req.body, respv);
+        console.log(psychologist, "psychologsttttttttttttttttttt");
+        if (psychologist.Exist) {
+          res.status(400).json({ message: "already existing" });
+        } else if (psychologist.error) {
+          res.status(400).json({ message: "something went wrong!!" });
+        } else {
+          res.status(200).json({ message: "successfully applied!!" });
+        }
+      }
+    } catch (error) {
+      console.log(error,"this  is error")
+      res.status(500).json({message:"Something went wrong!!"})
+
+    }
+  }
 
 
 };

@@ -220,6 +220,35 @@ module.exports = {
       console.error("Error uploading profile picture:", error);
       return {error};
     }
-  }
+  },
+
+  joiningPsycho: async (files) => {
+    try {
+      const { image, resume } = files;
+  
+      const uploadResumeeParams = {
+        Bucket: bucketName,
+        Key: `affiliateProgram-psychologist/resume/${resume[0].originalname}`,
+        Body: resume[0].buffer,
+      };
+      const resumeeResult = await s3.upload(uploadResumeeParams).promise();
+  
+      const uploadImageeParams = {
+        Bucket: bucketName,
+        Key: `affiliateProgram-psychologist/image/${image[0].originalname}`,
+        Body: image[0].buffer,
+      };
+      const imageeResult = await s3.upload(uploadImageeParams).promise();
+  
+      return {
+        resume: resumeeResult,
+        image: imageeResult,
+      };
+
+    } catch (error) {
+      console.error("Error uploading podcast:", error);
+      return {error}; 
+    }
+  },
   
 };

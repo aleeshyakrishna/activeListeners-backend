@@ -38,10 +38,10 @@ router.get('/my_profile/:id',authenticateToken.authenticateToken,userController.
 //edit user profile
 router.put('/edit_my_profile/:id',authenticateToken.authenticateToken,userController.editProfile)
 
-router.post('/add_profile_photo/:id',upload.single('profilePic'),userController.addProfilePic)
+router.post('/add_profile_photo/:id',upload.single('profilePic'),authenticateToken.authenticateToken,userController.addProfilePic)
 
 //delete user account
-router.delete('/delete_account/:id',userController.deleteAccount)
+router.delete('/delete_account/:id',authenticateToken.authenticateToken,userController.deleteAccount)
 
 //display all podcast
 router.get('/podcast',userController.viewAllPodcast)
@@ -60,9 +60,12 @@ router.post('/graduates_joining',userController.joiningGraduates)
 router.post('/psychologist_joining',upload.fields([{ name: 'image' },
 { name: 'resume' }]),userController.joinPsychologist)
 
-router.post('/addGender/:id',userController.addGender)
+router.post('/addGender/:id',authenticateToken.authenticateToken,userController.addGender)
 
-router.post('/addMobile/:id',userController.addMobile)
+router.post('/addMobile/:id',authenticateToken.authenticateToken,userController.addMobile)
 
+router.post('/createPassword/:id',authenticateToken.authenticateToken,userController.createPassword)
+
+router.post('/updatePassword/:id',userController.updatePassword)
 
 module.exports = router;

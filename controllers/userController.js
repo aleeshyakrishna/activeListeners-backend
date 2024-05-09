@@ -512,6 +512,41 @@ module.exports = {
       res.status(500).json({message:"Something went wrong!!"})
 
     }
+  },
+
+  createPassword:async(req,res)=>{
+    try {
+      console.log(req.body,req.params.id,"data")
+      const responsePassword = await userHelper.addPassword(req.body,req.params.id)
+      if(responsePassword.error){
+        res.status(500).json({message:"Internal server error!!"})
+      }else if(responsePassword.success){
+        const updatedData=responsePassword.checkUser
+        res.status(200).json({message:"Password updated!!",updatedData})
+      }
+    } catch (error) {
+      res.status(500).json({message:"Something went wrong!!"})
+
+    }
+  },
+
+  updatePassword:async(req,res)=>{
+    try {
+      console.log(req.body,req.params.id,"bodyyyd")
+      const updatePasswordResponse = await userHelper.updatePassword(req.body,req.params.id)
+      if(updatePasswordResponse.notmatch){
+        res.json({message:"Entered password not match with your current password"})
+      }else if(updatePasswordResponse.error){
+        res.status(500).json({message:"Internal server error!!"})
+      }else if(updatePasswordResponse.success){
+        const updatedData=updatePasswordResponse.checkUser
+        res.status(200).json({message:"Password updated!!",updatedData})
+      }
+    } catch (error) {
+      console.log(error,"im the error")
+      res.status(500).json({message:"Something went wrong!!"})
+
+    }
   }
 
 

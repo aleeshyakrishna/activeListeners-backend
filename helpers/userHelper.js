@@ -2180,103 +2180,7 @@ module.exports = {
       return { error: true };
     }
   },
-  // getOneUserAndUpdate: async (Id, updatedProfileData) => {
-
-
-  //   try {
-  //     console.log(Id,updatedProfileData, "in helper........");
-  //     const findUser = await User.findOne({ _id: Id });
-  //     console.log(findUser, "findoutttttttt");
-  //     if (findUser) {
-  //       const updatedUser = await User.findByIdAndUpdate(
-  //         Id,
-  //         updatedProfileData,
-  //         { new: true }
-  //       );
-
-  //       console.log(updatedUser, "updated daaaaaaaaaata..........");
-  //       if (updatedUser) {
-  //         return { update: true, updatedUser };
-  //       } else {
-  //         return { update: false };
-  //       }
-  //     } else {
-  //       return { notfind: true };
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     return { error: true };
-  //   }
-  // },
-
-//   getOneUserAndUpdate: async (Id, updatedProfileData) => {
-//     try {
-//         console.log(Id, updatedProfileData, "in helper........");
-//         const currentData = await User.findById({_id:Id})
-
-//         const userEmail = currentData.email
-//         const userPhone = currentData.mobile
-
-//         const updateEmail =updatedProfileData.email
-//         const updateMobile =updatedProfileData.phone
-
-//         if(userEmail == updateEmail && userPhone==updateMobile){
-//           console.log("email and mobile no chnage,continue updating directly");
-//         }else if(userEmail !== updateEmail && userPhone !== updateMobile){
-//           console.log("email and mobile both different,direct update");
-//         }
-//          else{
-//           console.log("diffff")
-//           if(userEmail == updateEmail){
-//             existMobile = await User.findOne({mobile:updateMobile})
-//             if(existMobile){
-//               console.log("already exist with ths mobile,camt update")
-//               // return ({mobileExist:true})
-//             }else{
-//               console.log("continue to update Mobile")
-//             }
-//           }else if(userPhone == updateMobile){
-//             existEmail = await User.findOne({email:updateEmail})
-//             if(existEmail){
-//               console.log("exisiting email..cant update")
-//               // return ({emailExist:true})
-//             }else {
-//               console.log("continue to update..")
-//             }
-            
-
-//             }else if(userEmail !== updateEmail){
-//               existMobile = await User.findOne({mobile:updateMobile})
-//               if(existMobile){
-//                 console.log("already exist with ths mobile")
-//                 // return ({mobileExist:true})
-//               }else{
-//                 console.log("update Mobile")
-//               }
-//           }
-//         }
-//         // const updatedUser = await User.findByIdAndUpdate(
-//         //     Id,
-//         //     {
-//         //         name: updatedProfileData.username,
-//         //         email: updatedProfileData.email,
-//         //         mobile: updatedProfileData.phone
-//         //     },
-//         //     { new: true } // Set to true to return the updated document
-//         // );
-//         // console.log(updatedUser, "data updated!!");
-//         // if(updatedUser){
-
-//         //   return {update: true,updatedUser}; // Return the updated user
-//         // }else{
-//         //   return { notfind: true,update:false };
-//         // }
-//     } catch (error) {
-//         console.error(error);
-//         // Return error if any
-//         return { error: true };
-//     }
-// },
+  
 
 getOneUserAndUpdate: async (Id, updatedProfileData) => {
   try {
@@ -2560,6 +2464,59 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
         return { success: true,checkUser };
       }
 
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
+  },
+
+  addPassword:async(userData,Id)=>{
+    try {
+      if(userData.password){
+        var hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+        const checkUser = await User.findByIdAndUpdate(
+          { _id: Id },
+          { password:hashedPassword },
+          { new: true }
+        );
+        if (checkUser) {
+          console.log("password updated:", checkUser);
+          return { success: true,checkUser };
+        }
+      }
+
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
+  },
+  updatePassword:async(requestData,Id)=>{
+    try {
+      const USERR = await User.findById({_id:Id})
+      console.log(USERR.password,"im the user............")
+      if(USERR){
+        const checkPassword = await bcrypt.compare(
+          requestData.currentPassword,
+          USERR.password
+        );
+
+        console.log(checkPassword,"check result")
+        if(!checkPassword){
+          return({notmatch:true})
+        }else{
+          const newHashedPassword = await bcrypt.hash(requestData.newPassword, saltRounds)
+          console.log(newHashedPassword,"hashed new password")
+          const checkUser = await User.findByIdAndUpdate(
+            { _id: Id },
+            { password:newHashedPassword },
+            { new: true }
+          );
+          if (checkUser) {
+            console.log("password updated:", checkUser);
+            return { success: true,checkUser };
+          }
+        }
+      }
     } catch (error) {
       console.log(error);
       return({error:true})

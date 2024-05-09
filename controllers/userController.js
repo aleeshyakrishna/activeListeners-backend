@@ -492,7 +492,29 @@ module.exports = {
     } catch (error) {
       res.status(500).json({message:"Something went wrong!!"})
     }
+  },
+
+  addMobile:async(req,res)=>{
+    try {
+      console.log(req.body,req.params.id,"request.......>")
+      const responseMobile =await userHelper.addMobile(req.body,req.params.id)
+      console.log(responseMobile,"res")
+      if(responseMobile.Exist){
+        res.json({message:"Mobile number already registered!!"})
+      } 
+      if(responseMobile.error){
+        res.status(500).json({message:"Internal server error!!"})
+      }else if(responseMobile.success){
+        const updatedData=responseMobile.checkUser
+        res.status(200).json({message:"Mobile updated!!",updatedData})
+      }
+    } catch (error) {
+      res.status(500).json({message:"Something went wrong!!"})
+
+    }
   }
+
+
 
 
 };

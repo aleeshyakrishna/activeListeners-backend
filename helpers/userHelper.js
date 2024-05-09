@@ -2541,5 +2541,28 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
       console.log(error);
       return({error:true})
     }
+  },
+
+  addMobile:async(userData,Id)=>{
+    try {
+      const mobileExist = await User.findOne({mobile:userData.mobile})
+      if(mobileExist){
+        console.log("exists user",mobileExist);
+        return { Exist: true };
+      }
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { mobile: userData.mobile },
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User mobile updated:", checkUser);
+        return { success: true,checkUser };
+      }
+
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
   }
 };

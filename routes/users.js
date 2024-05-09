@@ -62,5 +62,7 @@ router.post('/psychologist_joining',upload.fields([{ name: 'image' },
 
 router.post('/addGender/:id',userController.addGender)
 
+router.post('/addMobile/:id',userController.addMobile)
+
 
 module.exports = router;

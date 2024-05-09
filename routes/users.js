@@ -60,12 +60,16 @@ router.post('/graduates_joining',userController.joiningGraduates)
 router.post('/psychologist_joining',upload.fields([{ name: 'image' },
 { name: 'resume' }]),userController.joinPsychologist)
 
-router.post('/addGender/:id',authenticateToken.authenticateToken,userController.addGender)
+router.post('/addGender/:id',userController.addGender)
 
-router.post('/addMobile/:id',authenticateToken.authenticateToken,userController.addMobile)
+router.post('/addMobile/:id',userController.addMobile)
 
-router.post('/createPassword/:id',authenticateToken.authenticateToken,userController.createPassword)
+router.post('/createPassword/:id',userController.createPassword)
 
 router.post('/updatePassword/:id',userController.updatePassword)
+
+router.post('/forgotPassword',userController.forgotPassword)
+
+
 
 module.exports = router;

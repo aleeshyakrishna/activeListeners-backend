@@ -108,7 +108,7 @@ module.exports = {
 
   otpLogin: async (req, res) => {
     try {
-      // console.log(req.body, "huhu");
+      console.log(req.body, "huhu");
       await userHelper
         .userExist(req.body)
         .then(async (response) => {
@@ -547,7 +547,69 @@ module.exports = {
       res.status(500).json({message:"Something went wrong!!"})
 
     }
-  }
+  },
+
+  forgotPassword:async(req,res)=>{
+    try {
+      console.log(req.body,"detailedDaaaaaaaaata")
+      await userHelper
+        .userExist(req.body)
+        .then(async (response) => {
+          // console.log(response,"oooouuuuoo");
+          if (response.length > 0) {
+            const otp = await twilio.sendOtp(req.body);
+            // console.log(otp,"lll");
+            if (otp) {
+              res.status(200).json({ message: "otp send successfully!!" });
+            } else {
+              res.json({ message: "otp cant send.." });
+            }
+          } else {
+            res.json({ message: "something went wrong" });
+          }
+        })
+        .catch(() => {
+          res.json({ message: "user not registered!!" });
+        });
+    } catch (error) {
+      res.status(500).json({message:"Something went wrong!!"})
+
+    }
+  },
+
+  PasswordVerifyOtp: async (req, res) => {
+    try {
+      // console.log(req.body, "OTP verification request");
+      const { mobile, otp } = req.body;
+
+      // Verify OTP
+      const verificationResult = await twilio.verifyOtp(mobile, otp);
+      // console.log(verificationResult, 'Verification result');
+
+      if (verificationResult.valid) {
+        // OTP verification successful
+        // Authenticate user and generate token
+        const user = await userHelper.userExisted(mobile);
+        if (user) {
+          res.json({
+            message: "verified otp successfully",
+            user,
+            status: true,
+            
+          });
+        } else {
+          res.status(404).json({ message: "User not found" });
+        }
+      } else {
+        // OTP verification failed
+        res.status(400).json({ message: "Invalid OTP" });
+      }
+    } catch (error) {
+      console.error("Error in OTP verification:", error);
+      const msg = error.message;
+      res.status(500).json({ message: msg });
+    }
+  },
 
 
 

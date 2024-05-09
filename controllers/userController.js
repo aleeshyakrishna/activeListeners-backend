@@ -477,6 +477,21 @@ module.exports = {
       res.status(500).json({message:"Something went wrong!!"})
 
     }
+  },
+
+  addGender:async(req,res)=>{
+    try {
+      console.log("req.bodu",req.body,"id",req.params.id)
+      const responseGender = await userHelper.addGender(req.body,req.params.id)
+      if(responseGender.error){
+        res.status(500).json({message:"Internal server error!!"})
+      }else if(responseGender.success){
+        const updatedData=responseGender.checkUser
+        res.status(200).json({message:"profile picture updated!!",updatedData})
+      }
+    } catch (error) {
+      res.status(500).json({message:"Something went wrong!!"})
+    }
   }
 
 

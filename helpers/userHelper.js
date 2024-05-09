@@ -58,6 +58,8 @@ var fetchHtmlContent = async (htmlUrl) => {
           reject(err);
       });
   });
+
+
 };
 
 module.exports = {
@@ -2522,5 +2524,22 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
       console.log(error);
       return({error:true})
   }
+  },
+
+  addGender:async(UserData,Id)=>{
+    try {
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { gender: UserData.gender },
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User gender updated:", checkUser);
+        return { success: true,checkUser };
+      }
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
   }
 };

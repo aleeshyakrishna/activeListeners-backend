@@ -156,7 +156,7 @@ module.exports = {
           const Token = userHelper.createToken(userid.toString(), username);
           // console.log(Token, "this is tokennnnnnnn");
           res.json({
-            message: "user successfully logedIn",
+            message: "otp verified",
             user,
             status: true,
             Token,
@@ -555,17 +555,17 @@ module.exports = {
       await userHelper
         .userExist(req.body)
         .then(async (response) => {
-          // console.log(response,"oooouuuuoo");
-          if (response.length > 0) {
+          console.log(response,"oooouuuuoo");
+          if (response.exist) {
             const otp = await twilio.sendOtp(req.body);
             // console.log(otp,"lll");
             if (otp) {
-              res.status(200).json({ message: "otp send successfully!!" });
+              res.status(200).json({ message: "otp send successfully!!",data:response.userExists });
             } else {
               res.json({ message: "otp cant send.." });
             }
           } else {
-            res.json({ message: "something went wrong" });
+            res.json({ message: "mobile number not registered!!" });
           }
         })
         .catch(() => {

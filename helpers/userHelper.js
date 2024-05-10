@@ -222,11 +222,15 @@ module.exports = {
       console.log(mobile, "kkkkkkkkkkkkkkkkk");
 
       // Using async/await directly inside the function
-      var userExists = await User.find({ mobile: mobile });
+      var userExists = await User.findOne({ mobile: mobile });
 
       console.log(userExists, "User details for OTP verification");
+      if(userExists){
 
-      return userExists; // Return the result directly
+        return {exist:true,userExists}; // Return the result directly
+      }else{
+        return {exist:false}
+      }
     } catch (error) {
       console.error(error);
       return { error: true };
@@ -237,7 +241,7 @@ module.exports = {
       console.log(mobile, "kkkkkkkkkkkkkkkkk");
 
       // Using async/await directly inside the function
-      var userExists = await User.find({ mobile: mobile });
+      const userExists = await User.find({ mobile: mobile });
 
       console.log(userExists, "User details for OTP verification");
 

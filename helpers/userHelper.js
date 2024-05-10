@@ -31,6 +31,7 @@ const Podcast = require("../models/podcastSchema");
 const NGO = require("../models/ngoSchema")
 const Graduate = require("../models/graduateSchema")
 const OtherPsychologist = require("../models/othePsycholgistSchema")
+const AffiliateProgram = require("../models/affiliateProgramGetInTouchSchema")
 var http = require('http');
 const https = require('https');
 
@@ -2434,7 +2435,7 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
     try {
       const checkUser = await User.findByIdAndUpdate(
         { _id: Id },
-        { gender: UserData.gender },
+        { gender: UserData.Gender },
         { new: true }
       );
       if (checkUser) {
@@ -2449,14 +2450,14 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
 
   addMobile:async(userData,Id)=>{
     try {
-      const mobileExist = await User.findOne({mobile:userData.mobile})
+      const mobileExist = await User.findOne({mobile:userData.phone})
       if(mobileExist){
         console.log("exists user",mobileExist);
         return { Exist: true };
       }
       const checkUser = await User.findByIdAndUpdate(
         { _id: Id },
-        { mobile: userData.mobile },
+        { mobile: userData.phone },
         { new: true }
       );
       if (checkUser) {
@@ -2521,5 +2522,32 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
       console.log(error);
       return({error:true})
     }
-  }
+  },
+
+  saveAffiliateGetInTouch: async (formData) => {
+    try {
+      console.log(formData);
+      return new Promise((resolve, reject) => {
+        const newData = new AffiliateProgram({
+          name: formData.name,
+          email: formData.email,
+          mobile: formData.mobile,
+          subject:formData.subject,
+          message: formData.message,
+        });
+        newData
+          .save()
+          .then((result) => {
+            resolve(result);
+          })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
+      });
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
 };

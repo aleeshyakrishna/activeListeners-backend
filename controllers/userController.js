@@ -487,7 +487,7 @@ module.exports = {
         res.status(500).json({message:"Internal server error!!"})
       }else if(responseGender.success){
         const updatedData=responseGender.checkUser
-        res.status(200).json({message:"profile picture updated!!",updatedData})
+        res.status(200).json({message:"gender updated!!",updatedData})
       }
     } catch (error) {
       res.status(500).json({message:"Something went wrong!!"})
@@ -611,7 +611,27 @@ module.exports = {
     }
   },
 
-
+  affiliateGetInTouch:async(req,res)=>{
+    try {
+      userHelper.saveAffiliateGetInTouch(req.body).then((data) => {
+        if (data.error) {
+          res
+            .status(500)
+            .json({ message: "something went wrong!!please try again later!" });
+        } else {
+          res
+            .status(200)
+            .json({
+              message:
+                "succesfully submitted the form!we will get in touch as soon as possible!",
+            });
+        }
+      });
+    } catch (error) {
+      console.log(error,"im the error")
+      res.status(500).json({message:"Something went wrong!!",error})
+    }
+  }
 
 
 };

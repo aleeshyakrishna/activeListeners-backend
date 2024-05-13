@@ -7,7 +7,8 @@ const client = require("twilio")(accountSid, authToken);
 
 module.exports = {
   sendOtp: (Mobile) => {
-      console.log(accountSid,authToken,serviceSid,"looooooooooogggggg")
+      try {
+        console.log(accountSid,authToken,serviceSid,"looooooooooogggggg")
         console.log("twilioooo",Mobile);
       return new Promise((resolve, reject) => {
         
@@ -20,6 +21,9 @@ module.exports = {
             resolve(verification.sid);
           });
       });
+      } catch (error) {
+        console.log(error)
+      }
     },
     // verifyOtp : (mobileNo, otp) => {
 

@@ -2533,10 +2533,13 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
       console.log(formData);
       return new Promise((resolve, reject) => {
         const newData = new AffiliateProgram({
-          name: formData.name,
+          enroll_as:formData.enrollAs,
+          name: formData.fullName,
           email: formData.email,
-          mobile: formData.mobile,
-          subject:formData.subject,
+          mobile: formData.phoneNumber,
+          country:formData.country,
+          state:formData.state,
+          support_in:formData.support,
           message: formData.message,
         });
         newData

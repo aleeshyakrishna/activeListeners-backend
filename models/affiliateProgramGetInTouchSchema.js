@@ -2,7 +2,9 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const affiliateProgramGetInTouchSchema = new Schema({
-
+    enroll_as:{
+        type:String
+    },
     name:{
         
         type:String
@@ -13,7 +15,13 @@ const affiliateProgramGetInTouchSchema = new Schema({
     mobile:{
         type:String
     },
-    subject:{
+    country:{
+        type:String
+    },
+    state:{
+        type:String
+    },
+    support_in:{
         type:String
     },
     message:{
@@ -22,4 +30,4 @@ const affiliateProgramGetInTouchSchema = new Schema({
    
 })
 
-module.exports = mongoose.model('affiliateProgram_getInTouch_Requests',affiliateProgramGetInTouchSchema)
+module.exports = mongoose.model('griefSupport_getInTouch',affiliateProgramGetInTouchSchema)

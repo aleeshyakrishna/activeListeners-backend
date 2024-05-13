@@ -70,7 +70,7 @@ router.post('/updatePassword/:id',userController.updatePassword)
 
 router.post('/forgotPassword',userController.forgotPassword)
 
-router.post('/getintouch_affiliate',userController.affiliateGetInTouch)
+router.post('/getintouch_griefSupport',userController.griefSupportGetInTouch)
 
 
 

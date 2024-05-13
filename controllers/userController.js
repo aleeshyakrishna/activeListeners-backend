@@ -611,7 +611,7 @@ module.exports = {
     }
   },
 
-  affiliateGetInTouch:async(req,res)=>{
+  griefSupportGetInTouch:async(req,res)=>{
     try {
       userHelper.saveAffiliateGetInTouch(req.body).then((data) => {
         if (data.error) {

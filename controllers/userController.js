@@ -112,21 +112,26 @@ module.exports = {
       await userHelper
         .userExist(req.body)
         .then(async (response) => {
-          // console.log(response,"oooouuuuoo");
-          if (response.length > 0) {
+          console.log(response,"oooouuuuoo");
+          if (!response.exist) {
+            console.log("not exist..")
+            res.json({ message: "Mobile number not registered!!" });
+          } else {
+
             const otp = await twilio.sendOtp(req.body);
-            // console.log(otp,"lll");
+            console.log(otp,"lll");
             if (otp) {
-              res.status(200).json({ message: "otp send successfully!!" });
+              res.status(200).json({ message: "otp send successfully!!",user:response.userExists });
             } else {
               res.json({ message: "otp cant send.." });
             }
-          } else {
-            res.json({ message: "something went wrong" });
           }
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error)
           res.json({ message: "user not registered!!" });
+
+
         });
     } catch (error) {
       console.log(error);
@@ -136,28 +141,29 @@ module.exports = {
 
   verifyOtp: async (req, res) => {
     try {
-      // console.log(req.body, "OTP verification request");
+      console.log(req.body, "OTP verification request");
       const { mobile, otp } = req.body;
 
       // Verify OTP
       const verificationResult = await twilio.verifyOtp(mobile, otp);
-      // console.log(verificationResult, 'Verification result');
+      console.log(verificationResult, 'Verification result');
 
       if (verificationResult.valid) {
         // OTP verification successful
         // Authenticate user and generate token
         const user = await userHelper.userExisted(mobile);
         if (user) {
-          //  console.log(user,"userrr in verification");
+           console.log(user,"userrr in verification");
           const username = user[0].name;
           const userid = user[0]._id;
-          // console.log(userid, username, "peeeeeeeeeeeeeeee");
+          const userData = user[0]
+          console.log(userData,userid, username, "peeeeeeeeeeeeeeee");
 
           const Token = userHelper.createToken(userid.toString(), username);
-          // console.log(Token, "this is tokennnnnnnn");
+          console.log(Token, "this is tokennnnnnnn");
           res.json({
             message: "otp verified",
-            user,
+            user:userData,
             status: true,
             Token,
           });

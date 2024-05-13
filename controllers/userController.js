@@ -119,7 +119,7 @@ module.exports = {
           } else {
 
             const otp = await twilio.sendOtp(req.body);
-            console.log(otp,"lll");
+            console.log(otp,"lllll");
             if (otp) {
               res.status(200).json({ message: "otp send successfully!!",user:response.userExists });
             } else {

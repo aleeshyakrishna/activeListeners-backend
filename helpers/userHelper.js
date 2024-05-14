@@ -32,6 +32,7 @@ const NGO = require("../models/ngoSchema")
 const Graduate = require("../models/graduateSchema")
 const OtherPsychologist = require("../models/othePsycholgistSchema")
 const AffiliateProgram = require("../models/affiliateProgramGetInTouchSchema")
+const Students = require("../models/schoolStudentSchema")
 var http = require('http');
 const https = require('https');
 
@@ -2357,7 +2358,9 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
 
   postGraduate:async(graduateData)=>{
     try {
-      const graduateExistemail = await Graduate.findOne({email:graduateData.email})
+
+    if(graduateData.graduate){
+        const graduateExistemail = await Graduate.findOne({email:graduateData.email})
       const graduateExistmobile = await Graduate.findOne({mobile:graduateData.mobile})
       const graduateExistgit = await Graduate.findOne({github:graduateData.github})
       const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
@@ -2390,9 +2393,37 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
 
           const newGraduateData = await newGraduate.save()
           console.log(newGraduateData,"graaaaaaaad");
-          return ({exist:false},newGraduateData)
+          return ({exist:false,data:newGraduateData})
         }
-    } catch (error) {
+
+
+
+      }else{
+        console.log("urekaa")
+        const studentExistemail = await Students.findOne({email:graduateData.email})
+        const studentExistmobile = await Students.findOne({mobile:graduateData.mobile})
+
+        if(studentExistemail || studentExistmobile){
+          return ({exist:true})
+        }
+        const newStudent = new Students({
+          student_name:graduateData.name,
+          email:graduateData.email,
+          contact_number:graduateData.mobile,
+          country:graduateData.country,
+          state:graduateData.state,
+          city:graduateData.city,
+          pin:graduateData.pin,
+          dob:graduateData.dob,
+          standard:graduateData.class,
+          school_name:graduateData.school
+        })
+        const newStudentData = await newStudent.save()
+          console.log(newStudentData,"graaaaaaaad");
+          return ({exist:false,data:newStudentData})
+      }
+      
+    }catch (error) {
       console.log(error);
       return { error: true };
     }

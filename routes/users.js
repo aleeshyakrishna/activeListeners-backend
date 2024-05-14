@@ -7,7 +7,7 @@ const multer = require("multer")
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const authenticateToken = require("../middlewares/userAuth")
-
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 //get home page
 router.get('/', userController.getHome);
 
@@ -41,14 +41,14 @@ router.put('/edit_my_profile/:id',authenticateToken.authenticateToken,userContro
 router.post('/add_profile_photo/:id',upload.single('profilePic'),userController.addProfilePic)
 
 //delete user account
-router.delete('/delete_account/:id',authenticateToken.authenticateToken,userController.deleteAccount)
+router.delete('/delete_account/:id',userController.deleteAccount)
 
 //display all podcast
 router.get('/podcast',userController.viewAllPodcast)
 
 //get one particular podcast using id(the unique id - mongodb generated!!)
 router.get('/one_podcast/:id',userController.viewOnePodcast)
-
+//llll
 //NGO joining form submission
 router.post('/ngo_joining',userController.joinNgo)
 

@@ -7,7 +7,6 @@ const multer = require("multer")
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const authenticateToken = require("../middlewares/userAuth")
-const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 //get home page
 router.get('/', userController.getHome);
 
@@ -72,6 +71,7 @@ router.post('/forgotPassword',userController.forgotPassword)
 
 router.post('/getintouch_griefSupport',userController.griefSupportGetInTouch)
 
+router.post('/create-ccavenue-order',authenticateToken.authenticateToken,userController.postCheckout)
 
-
+router.post('/webhook',userController.postEvents)
 module.exports = router;

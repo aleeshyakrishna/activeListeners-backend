@@ -1,6 +1,9 @@
 const userHelper = require("../helpers/userHelper");
 const twilio = require("../utils/twilio");
 const s3Model = require("../models/s3Model");
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
+const endpointSecret = "whsec_aa9888572f623b5fb00199fb7a71a62792331e4d58fa4f05ca5bbaeed8cf65f3";
+
 module.exports = {
   getHome: (req, res) => {
     try {
@@ -634,10 +637,122 @@ module.exports = {
         }
       });
     } catch (error) {
-      console.log(error,"im the error")
+      console.log(error,"im the error...............error")
       res.status(500).json({message:"Something went wrong!!",error})
     }
+  },
+
+  postCheckout: async (req, res) => {
+    // try {
+      console.log(req.body, "data from frontend");
+    //   const userEmail = req.body.email;
+    //   const auth0UserId = userEmail;
+  
+    //   const existingCustomers = await stripe.customers.list({
+    //     email: userEmail,
+    //     limit: 1,
+    //   });
+  
+    //   console.log(existingCustomers.data[0], "stripeeeeeeeeeeeee");
+    //   let customer;
+  
+    //   if (existingCustomers.data.length > 0) {
+    //     // Customer already exists
+    //     customer = existingCustomers.data[0];
+  
+    //     // Check if the customer already has an active subscription
+    //     const subscriptions = await stripe.subscriptions.list({
+    //       customer: customer.id,
+    //       status: "active",
+    //       limit: 1,
+    //     });
+    //     console.log(subscriptions.data[0],"huhu")
+    //     if (subscriptions.data.length > 0) {
+    //       // Customer already has an active subscription, send them to billing portal to manage subscription
+    //       const stripeSession = await stripe.billingPortal.sessions.create({
+    //         customer: customer.id,
+    //         return_url: "https://billing.https://billing.stripe.com/p/login/test_aEUeX72tp60257W5kk.com/p/login/test_aEUeX72tp60257W5kk",
+    //       });
+    //       res.status(422).json({ redirectUrl: stripeSession.return_url });
+    //       return;
+    //     }
+    //   } else {
+    //     // No customer found, create a new one
+    //     customerDetails = existingCustomers.data[0];
+    //     console.log(customerDetails,"customer")
+    //     customer = await stripe.customers.create({
+    //       email: userEmail,
+    //       name:req.body.name,
+    //       metadata: {
+    //         userId: req.body.userId, // Replace with actual Auth0 user ID
+    //         userName : req.body.name,
+    //         subId:customerDetails.id,
+    //         userEmail:email
+
+    //       },
+    //     });
+    //   }
+  
+    //   // Now create the Stripe checkout session with the customer ID
+    //   const session = await stripe.checkout.sessions.create({
+    //     success_url: "http://localhost:3000/success",
+    //     cancel_url: "http://localhost:3000/cancel",
+    //     payment_method_types: ["card"],
+    //     mode: "subscription",
+    //     billing_address_collection: "auto", // Specify billing address collection as required
+    //     line_items: [{
+    //       price_data: {
+    //         currency:"inr",
+    //         product_data: {
+    //           name: "premium",
+    //           description: "sessions with kids and parents",
+    //         },
+    //         unit_amount: 1999 * 100,
+    //         recurring: {
+    //           interval: "month",
+    //         },
+    //       },
+    //       quantity: 1,
+         
+    //     }],
+    //     metadata: {
+    //       userId: auth0UserId,
+    //       userName:req.body.name
+    //     },
+    //     customer: customer.id, // Use the customer ID here
+    //   });
+    //   if(session){
+
+    //     res.status(200).json({ id: session.id });
+    //     return;
+    //   }
+    // } catch (error) {
+    //   console.log(error, "enrich-prize-led-abound im the error...............error");
+    //   res.status(500).json({ message: "Something went wrong!!", error });
+    // }
+  },
+
+  postEvents:(req,res)=>{
+    const payload = req.body
+    console.log(payload,"event happened in stripe...>><<>><<<");
+    event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    switch (event.type) {
+      case 'payment_intent.succeeded':
+        const paymentIntentSucceeded = event.data.object;
+        // Then define and call a function to handle the event payment_intent.succeeded
+        break;
+      // ... handle other event types
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
+  
+    // Return a 200 response to acknowledge receipt of the event
+    response.send();
   }
+  
+
+
+  
 
 
 };

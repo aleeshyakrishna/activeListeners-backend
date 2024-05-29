@@ -263,6 +263,41 @@ module.exports = {
         }
     },
 
+    GetOnePodcast : async (Id, datas, s3result) => {
+        try {
+            console.log(Id, "in helper........");
+            const findAppln = await Podcast.findByIdAndUpdate(
+                Id,
+                {
+                    title: datas.title,
+                    discription:datas.discription,
+
+                    page: datas.page,
+                    thumbnail: s3result.thumbnail.Location,
+                    source: s3result.source.Location
+                },
+                { new: true }
+            );
+            console.log(findAppln, "find out");
+            if (findAppln) {
+                // Assuming Hiring is a mongoose model, if not, replace with appropriate logic
+                const upd = await Hiring.findOneAndUpdate(
+                    // Update condition for Hiring document
+                    { videoId: Id },
+                    // Update fields for Hiring document
+                    { $set: { updatedField: 'updatedValue' } },
+                    { new: true } // To return the updated document
+                );
+                return { notfind: false, video: findAppln };
+            } else {
+                return { notfind: true };
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
     uploadPackage:async(s3Icon,packageData)=>{
         try {
            

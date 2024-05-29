@@ -7,7 +7,7 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
-const bucketName = "activelisteners";
+const bucketName = "activelistenersofficial";
 //sample
 module.exports = {
 
@@ -221,6 +221,8 @@ module.exports = {
       return {error};
     }
   },
+
+
 
   joiningPsycho: async (files) => {
     try {

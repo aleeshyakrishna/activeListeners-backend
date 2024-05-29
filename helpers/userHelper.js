@@ -2283,6 +2283,23 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
       return { error: true };
     }
   },
+
+  deleteProfilePic:async(Id)=>{
+    try {
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { profilePic: null },  
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User profile picture deleted:", checkUser);
+        return { success: true, checkUser };
+      }
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
   deleteProfile: async (userId) => {
     try {
       const deletedProf = await User.findByIdAndDelete({ _id: userId });

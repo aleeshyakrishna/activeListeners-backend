@@ -358,6 +358,34 @@ module.exports = {
     }
   },
 
+  updatePodcast: async (req, res) => {
+    try {
+      console.log(req.params.id, req.body, req.files, "iiid");
+
+      const resp = await s3Model.uploadPodcast(req.files);
+
+      if (resp.error) {
+        res.status(500).json({ message: "error uploading s3" });
+      } else {
+        const Getappln = await adminHelper.GetOnePodcast(
+          req.params.id,
+          req.body,
+          resp
+        );
+        console.log(Getappln, "enter into conroller");
+        if (Getappln.error || Getappln.notfind) {
+          res.json({ message: "try again!!" });
+        } else {
+          res.status(200).json({ Getappln });
+          // const updatedStatus = await adminHelper.update(req.params._id,req.body)
+        }
+      }
+    } catch (error) {
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+  
+
   addPackage: async (req, res) => {
     try {
       console.log(req.body, req.file, "this is package adding module...");
@@ -454,7 +482,7 @@ module.exports = {
 
   add_teamMember: async (req, res) => {
     try {
-      // console.log(req.body,req.files,"form data...");
+      console.log(req.body,req.files,"form data...");
       const response = await s3Model.uploadMemberData(req.files);
       console.log(response, "==============================");
       if (response.error) {

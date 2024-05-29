@@ -3,7 +3,7 @@ const twilio = require("../utils/twilio");
 const s3Model = require("../models/s3Model");
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
 const endpointSecret = "whsec_aa9888572f623b5fb00199fb7a71a62792331e4d58fa4f05ca5bbaeed8cf65f3";
-
+const CCAvenue = require('../utils/CCAvenue')
 module.exports = {
   getHome: (req, res) => {
     try {
@@ -355,6 +355,20 @@ module.exports = {
     }
 },
 
+deleteProfilePic:async(req,res)=>{
+  try {
+    const response = await userHelper.deleteProfilePic(req.params.id);
+    if(response.success){
+      res.json({msg:"your profile picture removed!!"})
+    }else{
+      res.json({msg:"Cant perform the action now!!"})
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+},
+
   addProfilePic:async(req,res)=>{
     try {
       console.log(req.params.id, "id",req.file,"profile photo");
@@ -642,96 +656,114 @@ module.exports = {
     }
   },
 
-  postCheckout: async (req, res) => {
-    // try {
-      console.log(req.body, "data from frontend");
-    //   const userEmail = req.body.email;
-    //   const auth0UserId = userEmail;
+  // postCheckout: async (req, res) => {
+  //   // try {
+  //     console.log(req.body, "data from frontend");
+  //   //   const userEmail = req.body.email;
+  //   //   const auth0UserId = userEmail;
   
-    //   const existingCustomers = await stripe.customers.list({
-    //     email: userEmail,
-    //     limit: 1,
-    //   });
+  //   //   const existingCustomers = await stripe.customers.list({
+  //   //     email: userEmail,
+  //   //     limit: 1,
+  //   //   });
   
-    //   console.log(existingCustomers.data[0], "stripeeeeeeeeeeeee");
-    //   let customer;
+  //   //   console.log(existingCustomers.data[0], "stripeeeeeeeeeeeee");
+  //   //   let customer;
   
-    //   if (existingCustomers.data.length > 0) {
-    //     // Customer already exists
-    //     customer = existingCustomers.data[0];
+  //   //   if (existingCustomers.data.length > 0) {
+  //   //     // Customer already exists
+  //   //     customer = existingCustomers.data[0];
   
-    //     // Check if the customer already has an active subscription
-    //     const subscriptions = await stripe.subscriptions.list({
-    //       customer: customer.id,
-    //       status: "active",
-    //       limit: 1,
-    //     });
-    //     console.log(subscriptions.data[0],"huhu")
-    //     if (subscriptions.data.length > 0) {
-    //       // Customer already has an active subscription, send them to billing portal to manage subscription
-    //       const stripeSession = await stripe.billingPortal.sessions.create({
-    //         customer: customer.id,
-    //         return_url: "https://billing.https://billing.stripe.com/p/login/test_aEUeX72tp60257W5kk.com/p/login/test_aEUeX72tp60257W5kk",
-    //       });
-    //       res.status(422).json({ redirectUrl: stripeSession.return_url });
-    //       return;
-    //     }
-    //   } else {
-    //     // No customer found, create a new one
-    //     customerDetails = existingCustomers.data[0];
-    //     console.log(customerDetails,"customer")
-    //     customer = await stripe.customers.create({
-    //       email: userEmail,
-    //       name:req.body.name,
-    //       metadata: {
-    //         userId: req.body.userId, // Replace with actual Auth0 user ID
-    //         userName : req.body.name,
-    //         subId:customerDetails.id,
-    //         userEmail:email
+  //   //     // Check if the customer already has an active subscription
+  //   //     const subscriptions = await stripe.subscriptions.list({
+  //   //       customer: customer.id,
+  //   //       status: "active",
+  //   //       limit: 1,
+  //   //     });
+  //   //     console.log(subscriptions.data[0],"huhu")
+  //   //     if (subscriptions.data.length > 0) {
+  //   //       // Customer already has an active subscription, send them to billing portal to manage subscription
+  //   //       const stripeSession = await stripe.billingPortal.sessions.create({
+  //   //         customer: customer.id,
+  //   //         return_url: "https://billing.https://billing.stripe.com/p/login/test_aEUeX72tp60257W5kk.com/p/login/test_aEUeX72tp60257W5kk",
+  //   //       });
+  //   //       res.status(422).json({ redirectUrl: stripeSession.return_url });
+  //   //       return;
+  //   //     }
+  //   //   } else {
+  //   //     // No customer found, create a new one
+  //   //     customerDetails = existingCustomers.data[0];
+  //   //     console.log(customerDetails,"customer")
+  //   //     customer = await stripe.customers.create({
+  //   //       email: userEmail,
+  //   //       name:req.body.name,
+  //   //       metadata: {
+  //   //         userId: req.body.userId, // Replace with actual Auth0 user ID
+  //   //         userName : req.body.name,
+  //   //         subId:customerDetails.id,
+  //   //         userEmail:email
 
-    //       },
-    //     });
-    //   }
+  //   //       },
+  //   //     });
+  //   //   }
   
-    //   // Now create the Stripe checkout session with the customer ID
-    //   const session = await stripe.checkout.sessions.create({
-    //     success_url: "http://localhost:3000/success",
-    //     cancel_url: "http://localhost:3000/cancel",
-    //     payment_method_types: ["card"],
-    //     mode: "subscription",
-    //     billing_address_collection: "auto", // Specify billing address collection as required
-    //     line_items: [{
-    //       price_data: {
-    //         currency:"inr",
-    //         product_data: {
-    //           name: "premium",
-    //           description: "sessions with kids and parents",
-    //         },
-    //         unit_amount: 1999 * 100,
-    //         recurring: {
-    //           interval: "month",
-    //         },
-    //       },
-    //       quantity: 1,
+  //   //   // Now create the Stripe checkout session with the customer ID
+  //   //   const session = await stripe.checkout.sessions.create({
+  //   //     success_url: "http://localhost:3000/success",
+  //   //     cancel_url: "http://localhost:3000/cancel",
+  //   //     payment_method_types: ["card"],
+  //   //     mode: "subscription",
+  //   //     billing_address_collection: "auto", // Specify billing address collection as required
+  //   //     line_items: [{
+  //   //       price_data: {
+  //   //         currency:"inr",
+  //   //         product_data: {
+  //   //           name: "premium",
+  //   //           description: "sessions with kids and parents",
+  //   //         },
+  //   //         unit_amount: 1999 * 100,
+  //   //         recurring: {
+  //   //           interval: "month",
+  //   //         },
+  //   //       },
+  //   //       quantity: 1,
          
-    //     }],
-    //     metadata: {
-    //       userId: auth0UserId,
-    //       userName:req.body.name
-    //     },
-    //     customer: customer.id, // Use the customer ID here
-    //   });
-    //   if(session){
+  //   //     }],
+  //   //     metadata: {
+  //   //       userId: auth0UserId,
+  //   //       userName:req.body.name
+  //   //     },
+  //   //     customer: customer.id, // Use the customer ID here
+  //   //   });
+  //   //   if(session){
 
-    //     res.status(200).json({ id: session.id });
-    //     return;
-    //   }
-    // } catch (error) {
-    //   console.log(error, "enrich-prize-led-abound im the error...............error");
-    //   res.status(500).json({ message: "Something went wrong!!", error });
-    // }
+  //   //     res.status(200).json({ id: session.id });
+  //   //     return;
+  //   //   }
+  //   // } catch (error) {
+  //   //   console.log(error, "enrich-prize-led-abound im the error...............error");
+  //   //   res.status(500).json({ message: "Something went wrong!!", error });
+  //   // }
+  // },
+
+
+
+  postCheckout: async (req, res) => {
+ 
+      console.log(req.body, "data from frontend");
+      try {
+        // if (!paymentData || !paymentData.merchant_id || !paymentData.order_id || !paymentData.amount) {
+        //   return res.status(400).json({ message: "Required payment data missing" });
+        // }
+        // Encrypt the order data
+    const encryptedOrder = CCAvenue.getEncryptedOrder(req.body);
+    console.log(encryptedOrder,"encrypted requstt")
+      } catch (error) {
+        console.log(error,"im the error...............error")
+        res.status(500).json({message:"Something went wrong!!",error})
+      }
+   
   },
-
   postEvents:(req,res)=>{
     const payload = req.body
     console.log(payload,"event happened in stripe...>><<>><<<");

@@ -35,6 +35,7 @@ router.get('/viewOne_user/:_id',adminController.viewUser);
 
 router.get('/viewHiring',adminController.viewHiring);
 
+router.get("/view_one_application/:_id",adminController.viewOneAppln);
 
 
 
@@ -44,14 +45,13 @@ router.post(
                 { name: 'source' }]),
                 adminController.addPodcast
             );
-            router.get("/view_one_application/:_id",adminController.viewOneAppln);
 
 router.get("/view_all_podcast",adminController.viewAllPodcast);
 
 router.delete('/delete_one_podcast/:id',adminController.deletePodcast)
 
 router.post('/view_and_editPodcast/:id',upload.fields([{ name: 'thumbnail' },
-{ name: 'source' }]),adminController.updateVideo)
+{ name: 'source' }]),adminController.updatePodcast)
 
 
 

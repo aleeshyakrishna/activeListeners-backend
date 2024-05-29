@@ -1,4 +1,4 @@
-import { createHash, createCipheriv, createDecipheriv } from "crypto";
+const { createHash, createCipheriv, createDecipheriv } = require("crypto");
 var dotenv = require("dotenv");
 dotenv.config();
 // var jwt_token = process.env.jwt_token;
@@ -78,6 +78,7 @@ class Configure {
   }
 
   getEncryptedOrder(orderParams) {
+    console.log(orderParams,"got in cc avenue file.-.-.-.-.-.-.-.-..-.-.-.")
     if (this.validate(merchant_id) && orderParams) {
       let data = `merchant_id=${initOptions.merchant_id}`;
       data += Object.entries(orderParams)
@@ -97,4 +98,4 @@ const CCAvenue = new Configure({
     merchant_id: merchant_id // Your Merchant ID from CCAvenue
 });
 
-export default CCAvenue;
+module.exports = CCAvenue;

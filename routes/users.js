@@ -37,6 +37,8 @@ router.get('/my_profile/:id',authenticateToken.authenticateToken,userController.
 //edit user profile
 router.put('/edit_my_profile/:id',authenticateToken.authenticateToken,userController.editProfile)
 
+router.post('/delete_profile_pic/:id',authenticateToken.authenticateToken,userController.deleteProfilePic)
+
 router.post('/add_profile_photo/:id',upload.single('profilePic'),userController.addProfilePic)
 
 //delete user account
@@ -73,5 +75,5 @@ router.post('/getintouch_griefSupport',userController.griefSupportGetInTouch)
 
 router.post('/create-ccavenue-order',authenticateToken.authenticateToken,userController.postCheckout)
 
-router.post('/webhook',userController.postEvents)
+// router.post('/webhook',userController.postEvents)
 module.exports = router;

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const schoolStudentSchema = new mongoose.Schema({
+const schoolSchema = new mongoose.Schema({
     student_name:{
         type:String
     },
@@ -32,4 +32,4 @@ const schoolStudentSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('schoolStudents',schoolStudentSchema)
+module.exports = mongoose.model('School',schoolSchema)

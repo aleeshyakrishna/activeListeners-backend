@@ -56,7 +56,7 @@ router.post('/ngo_joining',userController.joinNgo)
 //graduate joining form submission(if resume field needed..)
 // router.post('/graduates_joining',upload.single('resume'),userController.joiningGraduates)
 //no resume field 
-router.post('/graduates_joining',userController.joiningGraduates)
+router.post('/graduates_joining',userController.joiningCollege)
 
 router.post('/psychologist_joining',upload.fields([{ name: 'image' },
 { name: 'resume' }]),userController.joinPsychologist)

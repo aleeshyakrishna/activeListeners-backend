@@ -2,7 +2,7 @@ const Psychologyst = require("../models/psychologystSchema")
 const User = require("../models/userSchema")
 const Hiring =require("../models/hiringSchema")
 const Podcast = require("../models/podcastSchema")
-const Graduates = require("../models/graduateSchema")
+const College = require("../models/collegeSchema.js")
 const NGOs = require("../models/ngoSchema")
 const Videos = require("../models/videoSchema")
 const Packages = require("../models/packageSchema")
@@ -176,7 +176,7 @@ module.exports = {
     },
     viewGraduates:async()=>{
         try {
-            const allGraduates = await Graduates.find()
+            const allGraduates = await College.find()
             console.log(allGraduates,"Graduates");
             return (allGraduates)
         } catch (error) {

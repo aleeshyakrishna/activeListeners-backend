@@ -29,10 +29,10 @@ const getInTouch = require("../models/getInTouch");
 const hiring = require("../models/hiringSchema");
 const Podcast = require("../models/podcastSchema");
 const NGO = require("../models/ngoSchema")
-const Graduate = require("../models/graduateSchema")
+const College = require("../models/collegeSchema")
 const OtherPsychologist = require("../models/othePsycholgistSchema")
 const AffiliateProgram = require("../models/affiliateProgramGetInTouchSchema")
-const Students = require("../models/schoolStudentSchema")
+const School = require("../models/schoolStudentSchema")
 var http = require('http');
 const https = require('https');
 
@@ -2373,71 +2373,57 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
     }
   },
 
-  postGraduate:async(graduateData)=>{
+  postGraduate:async(FORMData)=>{
     try {
 
     if(graduateData.graduate){
         const graduateExistemail = await Graduate.findOne({email:graduateData.email})
       const graduateExistmobile = await Graduate.findOne({mobile:graduateData.mobile})
-      const graduateExistgit = await Graduate.findOne({github:graduateData.github})
-      const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
+      // const graduateExistgit = await Graduate.findOne({github:graduateData.github})
+      // const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
 
-      if(graduateExistemail || graduateExistmobile ||
-        graduateExistgit || graduateExistLinkedIn){
+      if(graduateExistemail || graduateExistmobile){
           return ({exist : true})
         }else{
-          const newGraduate = new Graduate({
-            name:graduateData.name,
-            email:graduateData.email,
-            mobile:graduateData.mobile,
-            country:graduateData.country,
-            state:graduateData.state,
-            city:graduateData.city,
-            pin:graduateData.pin,
-            dob:graduateData.dob,
-            qualification:graduateData.qualification,
-            college:graduateData.college,
-            yearOfpassing:graduateData.yearOfpassing,
-            cgpa:graduateData.cgpa,
-            internship:graduateData.internship,
-            internshipDetails:graduateData.internshipdetails,
-            linkedIn:graduateData.linkedIn,
-            github:graduateData.github,
-            otherLinks:graduateData.otherLinks
-            // expectedSalary:graduateData.expectedSalary,
-            // resume:resumeResponse.Location
+          const newCollege = new College({
+          name_of_college:FORMData.name,
+          telephoneNumber:FORMData.telephoneNumber,
+          email:FORMData.email_id,
+          websiteUrl:FORMData.websiteURL,
+          contact_person_name:FORMData.contact_person_name,
+          contact_person_email:FORMData.contact_person_email,
+          contact_person_designation:FORMData.contact_person_designation,
+          contact_person_phoneNumber:FORMData.contact_person_phoneNumber
+
           })
 
-          const newGraduateData = await newGraduate.save()
-          console.log(newGraduateData,"graaaaaaaad");
-          return ({exist:false,data:newGraduateData})
+          const newCollegeData = await newCollege.save()
+          console.log(newCollegeData,"collegeeeeeeeeee");
+          return ({exist:false,data:newCollegeData})
         }
 
 
 
       }else{
-        console.log("urekaa")
         const studentExistemail = await Students.findOne({email:graduateData.email})
         const studentExistmobile = await Students.findOne({mobile:graduateData.mobile})
 
         if(studentExistemail || studentExistmobile){
           return ({exist:true})
         }
-        const newStudent = new Students({
-          student_name:graduateData.name,
-          email:graduateData.email,
-          contact_number:graduateData.mobile,
-          country:graduateData.country,
-          state:graduateData.state,
-          city:graduateData.city,
-          pin:graduateData.pin,
-          dob:graduateData.dob,
-          standard:graduateData.class,
-          school_name:graduateData.school
+        const newSchool = new School({
+          name_of_school:FORMData.name,
+          telephoneNumber:FORMData.telephoneNumber,
+          email:FORMData.email_id,
+          websiteUrl:FORMData.websiteURL,
+          contact_person_name:FORMData.contact_person_name,
+          contact_person_email:FORMData.contact_person_email,
+          contact_person_designation:FORMData.contact_person_designation,
+          contact_person_phoneNumber:FORMData.contact_person_phoneNumber
         })
-        const newStudentData = await newStudent.save()
-          console.log(newStudentData,"graaaaaaaad");
-          return ({exist:false,data:newStudentData})
+        const newSchoolData = await newSchool.save()
+          console.log(newSchoolData,"graaaaaaaad");
+          return ({exist:false,data:newSchoolData})
       }
       
     }catch (error) {

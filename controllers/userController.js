@@ -454,10 +454,10 @@ deleteProfilePic:async(req,res)=>{
       res.status(500).json({message:"internal server error!"})
     }
   },
-  joiningGraduates:async(req,res)=>{
+  joiningCollege:async(req,res)=>{
     try {
       console.log(req.body,"graduate data");
-      //if resume file needed just uncommand the below line of code
+      //if resume file needed just un-command the below line of code
       // const response = await s3Model.graduateResume(req.file)
       const response = 20;
       if(response != 20) {

@@ -274,7 +274,8 @@ module.exports = {
 
                     page: datas.page,
                     thumbnail: s3result.thumbnail.Location,
-                    source: s3result.source.Location
+                    source: s3result.source.Location,
+                    category:datas.category
                 },
                 { new: true }
             );

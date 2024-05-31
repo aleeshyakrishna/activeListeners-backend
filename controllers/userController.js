@@ -365,7 +365,7 @@ deleteProfilePic:async(req,res)=>{
   try {
     const response = await userHelper.deleteProfilePic(req.params.id);
     if(response.success){
-      res.json({msg:"your profile picture removed!!"})
+      res.json({msg:"your profile picture removed!!",data:response.checkUser})
     }else{
       res.json({msg:"Cant perform the action now!!"})
     }

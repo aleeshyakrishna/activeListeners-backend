@@ -426,7 +426,7 @@ module.exports = {
 
   getOnePackageAndEdit: async (req, res) => {
     try {
-      console.log(req.params.id, "Id");
+      console.log(req.params.id, "Idppppppppppppppppppppppppooo");
       const packageGot = await adminHelper.getPackage(req.params.id);
       if (packageGot.notfound) {
         res.json({ message: "cant found the selected package!" });

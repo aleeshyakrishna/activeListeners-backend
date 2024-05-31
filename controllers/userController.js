@@ -208,6 +208,12 @@ module.exports = {
       res.status(500).json({ message: "internal server error!!" });
     }
   },
+
+  postArticle:(req,res)=>{
+    console.log(req.body,req.file,"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    res.json({msg:"success..!!"})
+  },
+
   postGetInTouch: async (req, res) => {
     try {
       console.log("entered dataaa", req.body);

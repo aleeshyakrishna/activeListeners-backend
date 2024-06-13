@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 const schoolSchema = new mongoose.Schema({
-    student_name:{
+    school_name:{
+        type:String
+    },
+    address:{
         type:String
     },
     email:{
@@ -9,27 +12,22 @@ const schoolSchema = new mongoose.Schema({
     contact_number:{
         type:String
     },
-    country:{
+    websiteUrl:{
         type:String
     },
-    state:{
+    contact_person_name:{
         type:String
     },
-    city:{
+    contact_person_email:{
         type:String
     },
-    pin:{
+    contact_person_designation:{
         type:String
     },
-    dob:{
-        type:String
-    },
-    standard:{
-        type:String
-    },
-    school_name:{
+    contact_person_phoneNumber:{
         type:String
     }
+
 })
 
 module.exports = mongoose.model('School',schoolSchema)

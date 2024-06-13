@@ -462,25 +462,25 @@ deleteProfilePic:async(req,res)=>{
   },
   joiningCollege:async(req,res)=>{
     try {
-      console.log(req.body,"graduate data");
+      console.log(req.body,"graduate data.....................>>>");
       //if resume file needed just un-command the below line of code
       // const response = await s3Model.graduateResume(req.file)
       const response = 20;
       if(response != 20) {
-        res.status(500).json({message:"Please try again later! "})
+        res.status(500).json({message:"Please try again later! "});
       }else{
-        const GraduateResponse = await userHelper.postGraduate(req.body)
+        const GraduateResponse = await userHelper.postGraduate(req.body);
         if(GraduateResponse.error){
-          res.status(500).json({message:"internal server error!"})
+          res.status(500).json({message:"internal server error!"});
         }else if(GraduateResponse.exist){
-          res.json({message:"Already registered!!"})
+          res.json({message:"Already registered!!"});
         }else{
-          res.status(200).json({message:"successfully registered"})
+          res.status(200).json({message:"successfully registered"});
         }
       }
       
     } catch (error) {
-      res.status(500).json({message:"internal server error!!!"})
+      res.status(500).json({message:"internal server error!!!"});
     }
   },
 

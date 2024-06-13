@@ -48,10 +48,10 @@ router.post(
 
 router.get("/view_all_podcast",adminController.viewAllPodcast);
 
-router.delete('/delete_one_podcast/:id',adminController.deletePodcast)
+router.delete('/delete_one_podcast/:id',adminController.deletePodcast);
 
 router.post('/view_and_editPodcast/:id',upload.fields([{ name: 'thumbnail' },
-{ name: 'source' }]),adminController.updatePodcast)
+{ name: 'source' }]),adminController.updatePodcast);
 
 
 

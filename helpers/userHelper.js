@@ -2337,56 +2337,61 @@ getOneUserAndUpdate: async (Id, updatedProfileData) => {
     }
   },
 
-  postGraduate:async(FORMData)=>{
+  postGraduate:async(graduateData)=>{
     try {
 
     if(graduateData.graduate){
-        const graduateExistemail = await Graduate.findOne({email:graduateData.email})
-      const graduateExistmobile = await Graduate.findOne({mobile:graduateData.mobile})
+        const graduateExistemail = await College.findOne({email:graduateData.email_id})
+      const graduateExistmobile = await College.findOne({mobile:graduateData.telephoneNumber})
       // const graduateExistgit = await Graduate.findOne({github:graduateData.github})
       // const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
 
       if(graduateExistemail || graduateExistmobile){
+        console.log(graduateExistemail,graduateExistmobile,"existinnnnnnnggggggggg")
           return ({exist : true})
         }else{
           const newCollege = new College({
-          name_of_college:FORMData.name,
-          telephoneNumber:FORMData.telephoneNumber,
-          email:FORMData.email_id,
-          websiteUrl:FORMData.websiteURL,
-          contact_person_name:FORMData.contact_person_name,
-          contact_person_email:FORMData.contact_person_email,
-          contact_person_designation:FORMData.contact_person_designation,
-          contact_person_phoneNumber:FORMData.contact_person_phoneNumber
+          name_of_college:graduateData.name,
+          telephoneNumber:graduateData.telephoneNumber,
+          email_id:graduateData.email_id,
+          address:graduateData.address,
+          websiteUrl:graduateData.websiteURL,
+          contact_person_name:graduateData.contact_person_name,
+          contact_person_email:graduateData.contact_person_email,
+          contact_person_designation:graduateData.contact_person_designation,
+          contact_person_phoneNumber:graduateData.contact_person_phoneNumber
 
           })
 
           const newCollegeData = await newCollege.save()
-          console.log(newCollegeData,"collegeeeeeeeeee");
+          console.log(newCollegeData,"collegeeeeeeeeeeeeeeeeee");
           return ({exist:false,data:newCollegeData})
         }
 
 
 
       }else{
-        const studentExistemail = await Students.findOne({email:graduateData.email})
-        const studentExistmobile = await Students.findOne({mobile:graduateData.mobile})
+        const studentExistemail = await School.findOne({email:graduateData.email_id})
+        const studentExistmobile = await School.findOne({contact_number:graduateData.telephoneNumber})
 
         if(studentExistemail || studentExistmobile){
+          console.log(studentExistemail,studentExistmobile,"existinnnnnnnggggggggg")
+
           return ({exist:true})
         }
         const newSchool = new School({
-          name_of_school:FORMData.name,
-          telephoneNumber:FORMData.telephoneNumber,
-          email:FORMData.email_id,
-          websiteUrl:FORMData.websiteURL,
-          contact_person_name:FORMData.contact_person_name,
-          contact_person_email:FORMData.contact_person_email,
-          contact_person_designation:FORMData.contact_person_designation,
-          contact_person_phoneNumber:FORMData.contact_person_phoneNumber
+          school_name:graduateData.name,
+          email:graduateData.email_id,
+          contact_number:graduateData.telephoneNumber,
+          websiteUrl:graduateData.websiteURL,
+          contact_person_name:graduateData.contact_person_name,
+          contact_person_email:graduateData.contact_person_email,
+          contact_person_designation:graduateData.contact_person_designation,
+          contact_person_phoneNumber:graduateData.contact_person_phoneNumber
         })
+        console.log("lojjj")
         const newSchoolData = await newSchool.save()
-          console.log(newSchoolData,"graaaaaaaad");
+          console.log(newSchoolData,"graaaaaaaaaaaaad");
           return ({exist:false,data:newSchoolData})
       }
       

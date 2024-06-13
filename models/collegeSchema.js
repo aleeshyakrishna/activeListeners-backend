@@ -6,7 +6,7 @@ const collegeSchema = new mongoose.Schema({
     telephoneNumber:{
         type:String
     },
-    email:{
+    email_id:{
         type:String
     },
     websiteUrl:{
@@ -23,7 +23,10 @@ const collegeSchema = new mongoose.Schema({
     },
     contact_person_phoneNumber:{
         type:String
-    }
+    },
+    address:{
+        type:String
+    },
     
 },{
     timestamps:true

@@ -33,6 +33,7 @@ app.use(cors({
       'http://localhost:3000',
       'https://www.activelisteners.in',
      'https://activelistenerss-frontendd-updated.vercel.app',
+     'https://new-active-listenerns-production.vercel.app'
       
   ], // Update with your client's origin
   methods: ["GET", "POST", "PUT", "DELETE"],

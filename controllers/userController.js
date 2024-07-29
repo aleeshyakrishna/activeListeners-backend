@@ -248,7 +248,7 @@ module.exports = {
         res.json({message:"You are already applied for this position!"})
       }else{
         const result = await s3Model.uploadFile(req.file);
-      console.log(result, "after s3 stroing.......");
+      console.log(result, "after s3 storing.......");
       if (result) {
         await userHelper.postResume(req.body, result).then((result) => {
           res

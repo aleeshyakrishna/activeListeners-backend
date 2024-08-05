@@ -29,7 +29,10 @@ const getInTouch = require("../models/getInTouch");
 const hiring = require("../models/hiringSchema");
 const Podcast = require("../models/podcastSchema");
 const NGO = require("../models/ngoSchema")
-const Graduate = require("../models/graduateSchema")
+const College = require("../models/collegeSchema")
+const OtherPsychologist = require("../models/othePsycholgistSchema")
+const AffiliateProgram = require("../models/affiliateProgramGetInTouchSchema")
+const School = require("../models/schoolStudentSchema")
 var http = require('http');
 const https = require('https');
 
@@ -57,6 +60,8 @@ var fetchHtmlContent = async (htmlUrl) => {
           reject(err);
       });
   });
+
+
 };
 
 module.exports = {
@@ -85,20 +90,32 @@ module.exports = {
   userRegistration: async (userData) => {
     try {
       console.log(userData, "daaaaataaaaaaaaaa helper");
+      if(userData.username){
+        var name=userData.username
+      }else{
+       var name =userData.name
+      }
+      
       const emailExist = await User.findOne({ email: userData.email });
       const mobileExist = await User.findOne({ mobile: userData.phoneNumber });
-      if (emailExist || mobileExist) {
+      if ((emailExist || mobileExist) && (emailExist !== null || mobileExist !== null)) {
         console.log("exists user", emailExist, mobileExist);
         return { Exist: true };
       }
       // console.log("not exists..");
-      const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+      if(userData.password){
+
+        var hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+      }else{
+        hashedPassword = null
+      }
       // console.log("llll");
       const newUser = new User({
-        name: userData.name,
+        name: name,
         email: userData.email,
         mobile: userData.phoneNumber,
         password: hashedPassword,
+        gender:userData.gender,
       });
       const userCreated = await newUser.save();
       return userCreated;
@@ -107,6 +124,39 @@ module.exports = {
       return { error: true };
     }
   },
+
+  userRegistrationWithGoogle: async (userData) => {
+    try {
+      console.log(userData, "daaaaataaaaaaaaaa helper with google");
+
+      
+      const emailExist = await User.findOne({ email: userData.email });
+      // const mobileExist = await User.findOne({ mobile: userData.phoneNumber });
+      if (emailExist) {
+        console.log("exists user", emailExist);
+        return { Exist: true };
+      }
+      const  hashedPassword = null
+      const phoneNumber = null
+      
+      // console.log("llll");
+      const newUser = new User({
+        name: userData.name,
+        email: userData.email,
+        mobile: phoneNumber,
+        password: hashedPassword,
+        profilePic:userData.picture,
+        gender:null,
+      });
+      const userCreated = await newUser.save();
+      return userCreated;
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
+
+
   userSignin: async (signIndata) => {
     try {
       console.log("helperrrrrrrr", signIndata);
@@ -132,14 +182,30 @@ module.exports = {
       return { error: true };
     }
   },
+  userSigninWithGoogle: async (signIndata) => {
+    try {
+      console.log("helperrrrrrrr", signIndata);
+      var userExist = await User.findOne({ email: signIndata.email });
+      console.log(userExist, "lllllllllllll");
+      if (userExist) {
+        console.log(userExist, "iiiii");
+          return { exist: true, userExist };
+      } else {
+        console.log("not exist");
+        return { exist: false };
+      }
+    } catch (error) {
+      return { error: true };
+    }
+  },
   createToken: (userId, userName) => {
     try {
       if (jwt_token) {
         console.log(userId, userName, jwt_token, ".........>");
         const token = jwt.sign(
-          { userId, userName }, // Wrap the payload in an object
+          { userId, userName }, 
           jwt_token,
-          { expiresIn: "1h" }
+          { expiresIn: "30m" }
         );
 
         return token;
@@ -157,11 +223,15 @@ module.exports = {
       console.log(mobile, "kkkkkkkkkkkkkkkkk");
 
       // Using async/await directly inside the function
-      var userExists = await User.find({ mobile: mobile });
+      var userExists = await User.findOne({ mobile: mobile });
 
       console.log(userExists, "User details for OTP verification");
+      if(userExists){
 
-      return userExists; // Return the result directly
+        return {exist:true,userExists}; // Return the result directly
+      }else{
+        return {exist:false}
+      }
     } catch (error) {
       console.error(error);
       return { error: true };
@@ -172,7 +242,7 @@ module.exports = {
       console.log(mobile, "kkkkkkkkkkkkkkkkk");
 
       // Using async/await directly inside the function
-      var userExists = await User.find({ mobile: mobile });
+      const userExists = await User.find({ mobile: mobile });
 
       console.log(userExists, "User details for OTP verification");
 
@@ -1941,8 +2011,17 @@ module.exports = {
                                               <br>
             
             
+<<<<<<< HEAD
                                               <input type="text" style="width:100%;border-radius:5em; height:60px">
                                             </div>
+=======
+                                              <form action="http://localhost:5000/submit-article" method="POST" enctype="multipart/form-data">
+                                              <input type="file" name="articleContent" rows="5" cols="50"></textarea><br>
+                                              <input type="email" id="email" name="email" ><br>
+
+                                              <input style="color:red" type="submit" value="Submit Article">
+                                            </form>                                            </div>
+>>>>>>> origin/main
             
             
                                           </div>
@@ -1967,6 +2046,7 @@ module.exports = {
             
             
             
+<<<<<<< HEAD
                       <div class="u-row-container" style="padding: 0px;background-color: transparent">
                         <div class="u-row" style="margin: 0 auto;min-width: 320px;max-width: 500px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
                           <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
@@ -2008,6 +2088,9 @@ module.exports = {
                           </div>
                         </div>
                       </div>
+=======
+                      
+>>>>>>> origin/main
             
             
             
@@ -2058,6 +2141,21 @@ module.exports = {
       return { error: true };
     }
   },
+  checkExist:async(data)=>{
+    try {
+      const existApplnEmail = await hiring.findOne({email:data.email})
+      const existApplnPos = await hiring.findOne({position:data.position})
+
+      if(existApplnEmail && existApplnPos){
+        return ({alreadyExist :true})
+      }else{
+        return ({alreadyExist :false})
+      }
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
 
   postResume: async (data, s3Result) => {
     try {
@@ -2101,26 +2199,114 @@ module.exports = {
       return { error: true };
     }
   },
-  getOneUserAndUpdate: async (Id, updatedProfileData) => {
-    try {
-      console.log(Id, "in helper........");
-      const findUser = await User.findOne({ _id: Id });
-      console.log(findUser, "findoutttttttt");
-      if (findUser) {
-        const updatedUser = await User.findByIdAndUpdate(
-          Id,
-          updatedProfileData,
-          { new: true }
-        );
+  
 
-        console.log(updatedUser, "updated daaaaaaaaaata..........");
-        if (updatedUser) {
+getOneUserAndUpdate: async (Id, updatedProfileData) => {
+  try {
+      console.log(Id, updatedProfileData, "in helper........");
+      
+      // Fetch the current user data
+      const currentData = await User.findById(Id);
+      if (!currentData) {
+          console.log("User not found");
+          return { notFound: true };
+      }
+      
+      // Extract current email and mobile
+      const userEmail = currentData.email;
+      const userPhone = currentData.mobile;
+      const userName = currentData.name
+
+      // Extract updated email and mobile
+      const updatedEmail = updatedProfileData.email;
+      const updatedMobile = updatedProfileData.phone;
+      const updatedName =updatedProfileData.username
+      // Check if both email and mobile are different
+      if(userEmail == updatedEmail && userPhone == updatedMobile && userName==updatedName){
+        console.log("no changes..")
+        return {noChange:true}
+      }
+
+      if (userEmail !== updatedEmail || userPhone !== updatedMobile) {
+          console.log("Either email or mobile is different, checking existing...");
+
+          // Check if email is different and exists
+          if (userEmail !== updatedEmail) {
+              const existingEmail = await User.findOne({ email: updatedEmail });
+              if (existingEmail) {
+                  console.log("Existing email, cannot update");
+                  return { emailExist: true };
+              }
+          }
+
+          // Check if mobile is different and exists
+          if (userPhone !== updatedMobile) {
+              const existingMobile = await User.findOne({ mobile: updatedMobile });
+              if (existingMobile) {
+                  console.log("Existing mobile number, cannot update");
+                  return { mobileExist: true };
+              }
+          }
+
+          // Update the user
+          const updatedUser = await User.findByIdAndUpdate(
+              Id,
+              {
+                  name: updatedProfileData.username,
+                  email: updatedEmail,
+                  mobile: updatedMobile
+              },
+              { new: true }
+          );
+          console.log("Data updated:", updatedUser);
           return { update: true, updatedUser };
-        } else {
-          return { update: false };
-        }
       } else {
-        return { notfind: true };
+          console.log("Both email and mobile are same, direct update");
+          const updatedUser = await User.findByIdAndUpdate(
+            Id,
+            {
+                name: updatedProfileData.username,
+                
+            },
+            { new: true }
+        );
+          return { update: true,updatedUser };
+      }
+  } catch (error) {
+      console.error(error);
+      return { error: true };
+  }
+},
+
+
+
+  addProfilePicture:async(profileData,Id)=>{
+    try {
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { profilePic: profileData.userProfilePic.Location },
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User profile picture updated:", checkUser);
+        return { success: true,checkUser };
+      }
+    } catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
+
+  deleteProfilePic:async(Id)=>{
+    try {
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { profilePic: null },  
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User profile picture deleted:", checkUser);
+        return { success: true, checkUser };
       }
     } catch (error) {
       console.log(error);
@@ -2202,44 +2388,225 @@ module.exports = {
 
   postGraduate:async(graduateData)=>{
     try {
-      const graduateExistemail = await Graduate.findOne({email:graduateData.email})
-      const graduateExistmobile = await Graduate.findOne({mobile:graduateData.mobile})
-      const graduateExistgit = await Graduate.findOne({github:graduateData.github})
-      const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
 
-      if(graduateExistemail || graduateExistmobile ||
-        graduateExistgit || graduateExistLinkedIn){
+    if(graduateData.graduate){
+        const graduateExistemail = await College.findOne({email:graduateData.email_id})
+      const graduateExistmobile = await College.findOne({mobile:graduateData.telephoneNumber})
+      // const graduateExistgit = await Graduate.findOne({github:graduateData.github})
+      // const graduateExistLinkedIn = await Graduate.findOne({linkedIn:graduateData.linkedIn})
+
+      if(graduateExistemail || graduateExistmobile){
+        console.log(graduateExistemail,graduateExistmobile,"existinnnnnnnggggggggg")
           return ({exist : true})
         }else{
-          const newGraduate = new Graduate({
-            name:graduateData.name,
-            email:graduateData.email,
-            mobile:graduateData.mobile,
-            country:graduateData.country,
-            state:graduateData.state,
-            city:graduateData.city,
-            pin:graduateData.pin,
-            dob:graduateData.dob,
-            qualification:graduateData.qualification,
-            college:graduateData.college,
-            yearOfpassing:graduateData.yearOfpassing,
-            cgpa:graduateData.cgpa,
-            internship:graduateData.internship,
-            internshipDetails:graduateData.internshipdetails,
-            linkedIn:graduateData.linkedIn,
-            github:graduateData.github,
-            otherLinks:graduateData.otherLinks
-            // expectedSalary:graduateData.expectedSalary,
-            // resume:resumeResponse.Location
+          const newCollege = new College({
+          name_of_college:graduateData.name,
+          telephoneNumber:graduateData.telephoneNumber,
+          email_id:graduateData.email_id,
+          address:graduateData.address,
+          websiteUrl:graduateData.websiteURL,
+          contact_person_name:graduateData.contact_person_name,
+          contact_person_email:graduateData.contact_person_email,
+          contact_person_designation:graduateData.contact_person_designation,
+          contact_person_phoneNumber:graduateData.contact_person_phoneNumber
+
           })
 
-          const newGraduateData = await newGraduate.save()
-          console.log(newGraduateData,"graaaaaaaad");
-          return ({exist:false},newGraduateData)
+          const newCollegeData = await newCollege.save()
+          console.log(newCollegeData,"collegeeeeeeeeeeeeeeeeee");
+          return ({exist:false,data:newCollegeData})
         }
+
+
+
+      }else{
+        const studentExistemail = await School.findOne({email:graduateData.email_id})
+        const studentExistmobile = await School.findOne({contact_number:graduateData.telephoneNumber})
+
+        if(studentExistemail || studentExistmobile){
+          console.log(studentExistemail,studentExistmobile,"existinnnnnnnggggggggg")
+
+          return ({exist:true})
+        }
+        const newSchool = new School({
+          school_name:graduateData.name,
+          email:graduateData.email_id,
+          contact_number:graduateData.telephoneNumber,
+          websiteUrl:graduateData.websiteURL,
+          contact_person_name:graduateData.contact_person_name,
+          contact_person_email:graduateData.contact_person_email,
+          contact_person_designation:graduateData.contact_person_designation,
+          contact_person_phoneNumber:graduateData.contact_person_phoneNumber
+        })
+        console.log("lojjj")
+        const newSchoolData = await newSchool.save()
+          console.log(newSchoolData,"graaaaaaaaaaaaad");
+          return ({exist:false,data:newSchoolData})
+      }
+      
+    }catch (error) {
+      console.log(error);
+      return { error: true };
+    }
+  },
+  ApplyingPsychologyst:async(psychologystData,respv)=>{
+    try {
+      console.log(psychologystData,respv,"poioopoi");
+      
+      const PsychoExist = await OtherPsychologist.findOne({email:psychologystData.email})
+      const mobileExist =await OtherPsychologist.findOne({mobile:psychologystData.mobile})
+      console.log(PsychoExist,"existing....");
+    
+      if(PsychoExist || mobileExist){
+          console.log("existing already................");
+          // res.json({message:"Psychologyst alredy existing!"})
+          return({Exist:true})
+      }else{
+          console.log("intooooooooooooooooo");
+          const newPsycho =await new OtherPsychologist({
+              name:psychologystData.name,
+              email:psychologystData.email,
+              mobile:psychologystData.mobile,
+              city:psychologystData.city,
+              state:psychologystData.state,
+              gender:psychologystData.gender,
+              available:psychologystData.available,
+              resume:respv.resume.Location,
+              image:respv.image.Location,
+              description:psychologystData.discription
+          })
+
+          const Psycho =await newPsycho.save()
+          console.log(Psycho,"datas in helper psyhcp");
+          return(Psycho)
+      }
+      
+  } catch (error) {
+      console.log(error);
+      return({error:true})
+  }
+  },
+
+  addGender:async(UserData,Id)=>{
+    try {
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { gender: UserData.Gender },
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User gender updated:", checkUser);
+        return { success: true,checkUser };
+      }
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
+  },
+
+  addMobile:async(userData,Id)=>{
+    try {
+      const mobileExist = await User.findOne({mobile:userData.phone})
+      if(mobileExist){
+        console.log("exists user",mobileExist);
+        return { Exist: true };
+      }
+      const checkUser = await User.findByIdAndUpdate(
+        { _id: Id },
+        { mobile: userData.phone },
+        { new: true }
+      );
+      if (checkUser) {
+        console.log("User mobile updated:", checkUser);
+        return { success: true,checkUser };
+      }
+
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
+  },
+
+  addPassword:async(userData,Id)=>{
+    try {
+      if(userData.password){
+        var hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+        const checkUser = await User.findByIdAndUpdate(
+          { _id: Id },
+          { password:hashedPassword },
+          { new: true }
+        );
+        if (checkUser) {
+          console.log("password updated:", checkUser);
+          return { success: true,checkUser };
+        }
+      }
+
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
+  },
+  updatePassword:async(requestData,Id)=>{
+    try {
+      const USERR = await User.findById({_id:Id})
+      console.log(USERR.password,"im the user............")
+      if(USERR){
+        const checkPassword = await bcrypt.compare(
+          requestData.currentPassword,
+          USERR.password
+        );
+
+        console.log(checkPassword,"check result")
+        if(!checkPassword){
+          return({notmatch:true})
+        }else{
+          const newHashedPassword = await bcrypt.hash(requestData.newPassword, saltRounds)
+          console.log(newHashedPassword,"hashed new password")
+          const checkUser = await User.findByIdAndUpdate(
+            { _id: Id },
+            { password:newHashedPassword },
+            { new: true }
+          );
+          if (checkUser) {
+            console.log("password updated:", checkUser);
+            return { success: true,checkUser };
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      return({error:true})
+    }
+  },
+
+  saveAffiliateGetInTouch: async (formData) => {
+    try {
+      console.log(formData);
+      return new Promise((resolve, reject) => {
+        const newData = new AffiliateProgram({
+          enroll_as:formData.enrollAs,
+          name: formData.fullName,
+          email: formData.email,
+          mobile: formData.phoneNumber,
+          country:formData.country,
+          state:formData.state,
+          support_in:formData.support,
+          message: formData.message,
+        });
+        newData
+          .save()
+          .then((result) => {
+            resolve(result);
+          })
+          .catch((error) => {
+            console.log(error);
+            reject(error);
+          });
+      });
     } catch (error) {
       console.log(error);
       return { error: true };
     }
-  }
+  },
 };

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const psychologystSchema = new mongoose.Schema({
+const otherPsychologistSchema = new mongoose.Schema({
     name:{
         type:String
     },
@@ -19,7 +19,8 @@ const psychologystSchema = new mongoose.Schema({
         type:String
     },
     available:{
-        type:String
+        type:String,
+        default:true
     },
     
     resume:{
@@ -34,7 +35,7 @@ const psychologystSchema = new mongoose.Schema({
 },
 {
     timestamps:true
-}
-)
+})
 
-module.exports = mongoose.model("psychologyst",psychologystSchema)
+module.exports = mongoose.model('joinedPsychologist',otherPsychologistSchema)
+

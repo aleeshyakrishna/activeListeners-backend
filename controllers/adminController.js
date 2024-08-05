@@ -322,6 +322,70 @@ module.exports = {
     }
   },
 
+  deleteVideo:async(req,res)=>{
+    try {
+      console.log(req.params.id, "this is id");
+      const response = await adminHelper.deleteOneVideo(req.params.id);
+      console.log("got response");
+      if (response.error) {
+        res.status(500).json({ message: "internal server error!!" });
+      } else if (response.success) {
+        res.json({ message: "successfully deleted!!" });
+      } else {
+        res.json({ message: "something went wrong!!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  deletePodcast:async(req,res)=>{
+    try {
+      console.log(req.params.id, "this is id");
+      const response = await adminHelper.deleteOnePodcast(req.params.id);
+      console.log("got response");
+      if (response.error) {
+        res.status(500).json({ message: "internal server error!!" });
+      } else if (response.success) {
+        res.json({ message: "successfully deleted!!" });
+      } else {
+        res.json({ message: "something went wrong!!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+
+  updatePodcast: async (req, res) => {
+    try {
+      console.log(req.params.id, req.body, req.files, "iiid");
+
+      const resp = await s3Model.uploadPodcast(req.files);
+
+      if (resp.error) {
+        res.status(500).json({ message: "error uploading s3" });
+      } else {
+        const Getappln = await adminHelper.GetOnePodcast(
+          req.params.id,
+          req.body,
+          resp
+        );
+        console.log(Getappln, "enter into conroller");
+        if (Getappln.error || Getappln.notfind) {
+          res.json({ message: "try again!!" });
+        } else {
+          res.status(200).json({ Getappln });
+          // const updatedStatus = await adminHelper.update(req.params._id,req.body)
+        }
+      }
+    } catch (error) {
+      res.status(500).json({ message: "internal server error!" });
+    }
+  },
+  
+
   addPackage: async (req, res) => {
     try {
       console.log(req.body, req.file, "this is package adding module...");
@@ -362,7 +426,7 @@ module.exports = {
 
   getOnePackageAndEdit: async (req, res) => {
     try {
-      console.log(req.params.id, "Id");
+      console.log(req.params.id, "Idppppppppppppppppppppppppooo");
       const packageGot = await adminHelper.getPackage(req.params.id);
       if (packageGot.notfound) {
         res.json({ message: "cant found the selected package!" });
@@ -381,7 +445,7 @@ module.exports = {
       if (iconRes.error) {
         res.status(500).json({ message: "internal server error!!" });
       } else {
-        const what = await adminHelper.findPackage(
+        const what = await adminHelper.findPackages(
           req.params.id,
           req.body,
           iconRes
@@ -418,7 +482,7 @@ module.exports = {
 
   add_teamMember: async (req, res) => {
     try {
-      // console.log(req.body,req.files,"form data...");
+      console.log(req.body,req.files,"form data...");
       const response = await s3Model.uploadMemberData(req.files);
       console.log(response, "==============================");
       if (response.error) {
@@ -503,6 +567,23 @@ module.exports = {
                 res.status(200).json({message:"Please try again later!!"})
       }
     }catch(error){
+      console.log(error);
+      res.status(500).json({ msg: "internal server error!" });
+    }
+  },
+
+  displayGetintouch:async(req,res)=>{
+    try {
+      const getintouch = await adminHelper.getGetintouch();
+      if (getintouch.error) {
+        res.json({ message: "internal server error" });
+      }
+      if (getintouch.present) {
+        res.json({ getintouch });
+      } else {
+        res.json({ message: "not found!!" });
+      }
+    } catch (error) {
       console.log(error);
       res.status(500).json({ msg: "internal server error!" });
     }

@@ -8,6 +8,11 @@ const upload = multer({storage:storage})
 // router.post('/admin_login',adminController.adminLogin)
 router.post('/login', adminController.adminLogin);
 
+
+
+
+//PSYCHOLOGIST MODULE
+
 router.post('/post_psychologyst',upload.fields([{ name: 'image' },
             { name: 'resume' }]),adminController.addPsychologyst);
 
@@ -15,21 +20,42 @@ router.get('/view_psychologyst',adminController.viewPsychologysts);
 
 router.get('/viewOne_Psychologyst/:_id', adminController.viewPsychologyst);
 
+
+
+//USER MODULE
+
 router.get('/view_all_users',adminController.findAllUsers);
 
 router.get('/viewOne_user/:_id',adminController.viewUser);
 
+
+
+
+//HIRING MODULE
+
 router.get('/viewHiring',adminController.viewHiring);
 
-//add podcast
+router.get("/view_one_application/:_id",adminController.viewOneAppln);
+
+
+
+//PODCAST MODULE
 router.post(
                 '/add_podcast',upload.fields([{ name: 'thumbnail' },
                 { name: 'source' }]),
                 adminController.addPodcast
             );
-            router.get("/view_one_application/:_id",adminController.viewOneAppln);
 
 router.get("/view_all_podcast",adminController.viewAllPodcast);
+
+router.delete('/delete_one_podcast/:id',adminController.deletePodcast);
+
+router.post('/view_and_editPodcast/:id',upload.fields([{ name: 'thumbnail' },
+{ name: 'source' }]),adminController.updatePodcast);
+
+
+
+//CHART COUNT
 
 router.get('/total_psychologist',adminController.viewPsychologystsCount)
 
@@ -39,6 +65,11 @@ router.get('/total_ngo_count',adminController.viewNGO)
 
 router.get('/registeredUser-count',adminController.findUserCount)
 
+
+
+
+//VIDEO MODULE
+
 router.post('/add_videos',upload.fields([{ name: 'thumbnail' },
 { name: 'source' }]),adminController.addVideo)
 
@@ -46,6 +77,13 @@ router.get('/get_allVideos',adminController.viewAllVideos)
 
 router.post('/view_and_editVideo/:id',upload.fields([{ name: 'thumbnail' },
 { name: 'source' }]),adminController.updateVideo)
+
+router.delete('/delete_one_video/:id',adminController.deleteVideo)
+
+
+
+
+//PACKAGE MODULE
 
 router.post('/add_package',upload.single('icon'),adminController.addPackage)
 
@@ -56,6 +94,10 @@ router.get('/read_one_package/:id',adminController.getOnePackageAndEdit)
 router.post('/update_package/:id',upload.single('icon'),adminController.updatePackage)
 
 router.delete('/delete_package/:id',adminController.deletePackage)
+
+
+
+//TEAM - MEMBER MODULE
 
 router.post('/add_member',upload.fields([{name:'image'},
                             {name:'audio'}]),adminController.add_teamMember)
@@ -68,6 +110,11 @@ router.post('/update_member/:id',upload.fields([{name:'image'},
 
 router.delete('/delete_member/:id',adminController.deleteMember)
 
+
+
+
+
+router.get('/view_getInTouch',adminController.displayGetintouch)
 //after creating api , you have to push into git hub..!!
 
 module.exports = router;

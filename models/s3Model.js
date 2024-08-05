@@ -7,7 +7,7 @@ AWS.config.update({
 });
 
 const s3 = new AWS.S3();
-const bucketName = "activelisteners";
+const bucketName = "activelistenersofficial";
 //sample
 module.exports = {
 
@@ -197,6 +197,60 @@ module.exports = {
       console.error("Error uploading graduate:", error);
       return {error};
     }
-  }
+  },
+
+  profileUpload:async(profilePic)=>{
+    try {
+      console.log(profilePic,"in s3 model");
+      const {originalname,buffer} = profilePic;
+
+      const keys = `usersProfile/${originalname}`
+
+      const profileParams = {
+        Bucket : bucketName,
+        Key : keys,
+        Body:buffer
+      }
+
+      const profileUploadResponse = await s3.upload(profileParams).promise()
+      return {
+        userProfilePic :profileUploadResponse
+      }
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+      return {error};
+    }
+  },
+
+
+
+  joiningPsycho: async (files) => {
+    try {
+      const { image, resume } = files;
+  
+      const uploadResumeeParams = {
+        Bucket: bucketName,
+        Key: `affiliateProgram-psychologist/resume/${resume[0].originalname}`,
+        Body: resume[0].buffer,
+      };
+      const resumeeResult = await s3.upload(uploadResumeeParams).promise();
+  
+      const uploadImageeParams = {
+        Bucket: bucketName,
+        Key: `affiliateProgram-psychologist/image/${image[0].originalname}`,
+        Body: image[0].buffer,
+      };
+      const imageeResult = await s3.upload(uploadImageeParams).promise();
+  
+      return {
+        resume: resumeeResult,
+        image: imageeResult,
+      };
+
+    } catch (error) {
+      console.error("Error uploading podcast:", error);
+      return {error}; 
+    }
+  },
   
 };

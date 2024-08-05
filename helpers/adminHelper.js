@@ -2,11 +2,12 @@ const Psychologyst = require("../models/psychologystSchema")
 const User = require("../models/userSchema")
 const Hiring =require("../models/hiringSchema")
 const Podcast = require("../models/podcastSchema")
-const Graduates = require("../models/graduateSchema")
+const College = require("../models/collegeSchema.js")
 const NGOs = require("../models/ngoSchema")
 const Videos = require("../models/videoSchema")
 const Packages = require("../models/packageSchema")
 const Team = require('../models/teamSchema.js')
+const GetinTouch = require('../models/getInTouch.js')
 const mongoose= require("mongoose")
 module.exports = {
     AddPsychologyst:async(psychologystData,respv)=>{
@@ -34,7 +35,7 @@ module.exports = {
                     available:psychologystData.available,
                     resume:respv.resume.Location,
                     image:respv.image.Location,
-                    discription:psychologystData.discription
+                    description:psychologystData.discription
                 })
     
                 const Psycho =await newPsycho.save()
@@ -175,7 +176,7 @@ module.exports = {
     },
     viewGraduates:async()=>{
         try {
-            const allGraduates = await Graduates.find()
+            const allGraduates = await College.find()
             console.log(allGraduates,"Graduates");
             return (allGraduates)
         } catch (error) {
@@ -262,6 +263,42 @@ module.exports = {
         }
     },
 
+    GetOnePodcast : async (Id, datas, s3result) => {
+        try {
+            console.log(Id, "in helper........");
+            const findAppln = await Podcast.findByIdAndUpdate(
+                Id,
+                {
+                    title: datas.title,
+                    discription:datas.discription,
+
+                    page: datas.page,
+                    thumbnail: s3result.thumbnail.Location,
+                    source: s3result.source.Location,
+                    category:datas.category
+                },
+                { new: true }
+            );
+            console.log(findAppln, "find out");
+            if (findAppln) {
+                // Assuming Hiring is a mongoose model, if not, replace with appropriate logic
+                const upd = await Hiring.findOneAndUpdate(
+                    // Update condition for Hiring document
+                    { videoId: Id },
+                    // Update fields for Hiring document
+                    { $set: { updatedField: 'updatedValue' } },
+                    { new: true } // To return the updated document
+                );
+                return { notfind: false, video: findAppln };
+            } else {
+                return { notfind: true };
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
     uploadPackage:async(s3Icon,packageData)=>{
         try {
            
@@ -318,7 +355,7 @@ module.exports = {
     },
 
     
-    findPackage:async(Id,newData,Icon)=>{
+    findPackages:async(Id,newData,Icon)=>{
         try {
             const findPack = await Packages.findOneAndUpdate(
                 {Id},
@@ -342,6 +379,38 @@ module.exports = {
                 return ({update:true},findPack)
             }else{
                 return ({update:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    deleteOneVideo:async(Id)=>{
+        try {
+            console.log("inside delete package helper");
+            const deleteVideo = await Videos.findByIdAndDelete({_id:Id})
+            console.log(deleteVideo,"deleted!!");
+            if(deleteVideo){
+                return ({success:true})
+            }else{
+                return ({success:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    deleteOnePodcast:async(Id)=>{
+        try {
+            console.log("inside delete helper");
+            const deletePod = await Podcast.findByIdAndDelete({_id:Id})
+            console.log(deletePod,"deleted!!");
+            if(deletePod){
+                return ({success:true})
+            }else{
+                return ({success:false})
             }
         } catch (error) {
             console.log(error);
@@ -445,6 +514,21 @@ module.exports = {
                 return ({success:true})
             }else{
                 return ({success:false})
+            }
+        } catch (error) {
+            console.log(error);
+            return { error: true };
+        }
+    },
+
+    getGetintouch:async()=>{
+        try {
+            const allGet = await GetinTouch.find()
+            if(allGet){
+                console.log(allGet);
+                return ({present:true,allGet})
+            }else{
+                return ({present:false})
             }
         } catch (error) {
             console.log(error);

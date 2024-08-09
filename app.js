@@ -28,9 +28,11 @@ app.use(cors({
   origin: [
       'http://localhost:3000',
       'http://localhost:3001',
+
       "https://active-listeners-ifuw.vercel.app",
       "https://new-active-listenerns-production.vercel.app",
       "https://activelisteners-backend.onrender.com",
+      "https://www.activelisteners.in",
       "http://activelistenerss-frontendd.vercel.app",],
 
   methods: ["GET", "POST", "PUT", "DELETE"],
